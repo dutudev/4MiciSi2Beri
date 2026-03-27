@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Draggable : MonoBehaviour
 {
+    [SerializeField] 
+    private float moveSpeed;
+    [SerializeField] 
+    private float stopSpeed;
     private Rigidbody2D rb;
     private bool _dragging = false;
     private Camera _camera;
     void Start()
     {
         _camera = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
     }
     void Update()
     {
