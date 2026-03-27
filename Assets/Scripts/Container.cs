@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,20 @@ public class Container : MonoBehaviour
     {
 
     }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Meat"))
+        {
+            var meat = other.GetComponent<Meat>();
+            if (!meat.IsDragging())
+            {
+                ingredients.Add(meat.GetIngredient());
+                Destroy(other.gameObject);
+            }
+        }
+    }
+
     public static bool operator ==(Container c1, Container c2){
         return c1.ingredients.SequenceEqual(c2.ingredients);
     }
