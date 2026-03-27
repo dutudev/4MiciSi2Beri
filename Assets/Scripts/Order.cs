@@ -23,17 +23,18 @@ public class Order : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    List<Ingredient> possibleSauces;
-    [SerializeField]
-    List<Ingredient> possibleDishes;
 
     public Order Randomize()
     {
-        for (int i = 1; i< Random.Range(1, 3); i++)
+        for (int i = 0; i< Random.Range(1, 3); i++)
         {
-            if (!Sauce && Random.Range(1, 2) == 1) Sauce = possibleSauces[Random.Range(1,possibleSauces.Count)];
-            else desiredOrder.Add(possibleDishes[Random.Range(1, possibleDishes.Count)]);
+            if (Sauce == null && Random.Range(1, 3) == 1) Sauce = GameManager.gameManager.possibleSauces[Random.Range(0, GameManager.gameManager.possibleSauces.Count)];
+            else
+            {
+                Ingredient dish = GameManager.gameManager.possibleDishes[Random.Range(0, GameManager.gameManager.possibleDishes.Count)];
+                desiredOrder.Add(dish);
+                Debug.Log(dish.name);
+            }
         }
         return this;
     }

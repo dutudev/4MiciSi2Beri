@@ -31,12 +31,4 @@ public class Container : MonoBehaviour
             }
         }
     }
-
-    public static bool operator ==(Container c1, Container c2){
-        return c1.ingredients.SequenceEqual(c2.ingredients);
-    }
-    public static bool operator !=(Container c1, Container c2)
-    {
-        return !c1.ingredients.SequenceEqual(c2.ingredients);
-    }
 }
