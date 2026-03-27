@@ -31,6 +31,7 @@ public class GrillBehaviour : MonoBehaviour
         if (collision.gameObject.CompareTag("Meat") && meatOnGrill.Contains(collision.gameObject))
         {
             meatOnGrill.Remove(collision.gameObject);
+
         }
     }
 }
