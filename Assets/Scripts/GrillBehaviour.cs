@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GrillBehaviour : MonoBehaviour
 {
-    public Meat[] meatOnGrill;
+    public List<GameObject> meatOnGrill = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
@@ -13,9 +13,24 @@ public class GrillBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (Meat meat in meatOnGrill)
+        foreach (GameObject meatObject in meatOnGrill)
         {
-            meat.progress += Time.deltaTime;
+            meatObject.GetComponent<Meat>().AffectCookedProgress(Time.deltaTime);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Meat") && !meatOnGrill.Contains(collision.gameObject))
+        {
+            meatOnGrill.Add(collision.gameObject);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Meat") && meatOnGrill.Contains(collision.gameObject))
+        {
+            meatOnGrill.Remove(collision.gameObject);
         }
     }
 }
