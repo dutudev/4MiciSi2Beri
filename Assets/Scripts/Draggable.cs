@@ -8,6 +8,7 @@ public class Draggable : MonoBehaviour
     private float moveSpeed;
     [SerializeField] 
     private float stopSpeed;
+    
     private Rigidbody2D rb;
     private bool _dragging = false;
     private Camera _camera;
@@ -42,5 +43,10 @@ public class Draggable : MonoBehaviour
     private void OnMouseDown()
     {
         _dragging = true;
+    }
+    
+    public bool IsDragging()
+    {
+        return _dragging;
     }
 }

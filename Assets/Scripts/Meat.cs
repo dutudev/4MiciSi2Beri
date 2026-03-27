@@ -10,9 +10,7 @@ public class Meat : Draggable
     [SerializeField] 
     private Ingredient ingredient;
     
-    private bool _dragging = false;
     private float _cookedProgress = 0f;
-    private Camera _camera;
     
 
     public void AffectCookedProgress(float set)
@@ -25,8 +23,5 @@ public class Meat : Draggable
         return ingredient;
     }
 
-    public bool IsDragging()
-    {
-        return _dragging;
-    }
+    
 }
