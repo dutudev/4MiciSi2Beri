@@ -35,16 +35,18 @@ public class Draggable : MonoBehaviour
     {
         if (_dragging)
         {
-            Vector2 force;
             if (_camera == null || rb == null)
-            {
                 Recache();
-            }
 
-            rb.drag = 3;
-            force = _camera.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position;
-            double stopForce = Math.Pow(force.magnitude,stopPower)/Math.Pow(10,stopPower-1);
-            rb.AddForce(force.normalized * moveSpeed * (float)stopForce, ForceMode2D.Impulse);
+            Vector2 target = _camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 toTarget = target - (Vector2)transform.position;
+
+            float stiffness = 200f;
+            float damping = 14f;    // keep slightly under critical for soft overshoot
+
+            Vector2 force = toTarget * stiffness - rb.velocity * damping;
+
+            rb.AddForce(force, ForceMode2D.Force);
         }
     }
 
