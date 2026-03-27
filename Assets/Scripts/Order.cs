@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Order : MonoBehaviour
 {
-    public List<Ingredient> desiredOrder = new List<Ingredient>();
+    public List<Ingredient> desiredOrder = new();
     public Ingredient Sauce;
     public int preparationTime;
     public int price;

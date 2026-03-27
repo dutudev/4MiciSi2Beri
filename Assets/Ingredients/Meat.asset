@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Meat
   m_EditorClassIdentifier: 
   name: Meat
-  price: 0
+  price: 6.8
   sprite: {fileID: 0}
