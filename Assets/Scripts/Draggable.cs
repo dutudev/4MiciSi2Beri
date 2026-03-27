@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class Draggable : MonoBehaviour
             _dragging = false;
         }
     }
+    public float stopPower = 2f;
 
     void FixedUpdate()
     {
@@ -41,8 +43,8 @@ public class Draggable : MonoBehaviour
 
             rb.drag = 3;
             force = _camera.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position;
-            float stopForce = 1f;
-            rb.AddForce(force.normalized * moveSpeed * stopForce, ForceMode2D.Impulse);
+            double stopForce = Math.Pow(force.magnitude,stopPower)/Math.Pow(10,stopPower-1);
+            rb.AddForce(force.normalized * moveSpeed * (float)stopForce, ForceMode2D.Impulse);
         }
     }
 

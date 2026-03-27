@@ -222,6 +222,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1371026265245426922, guid: 76de338c970940f49a4b093cdce87d97, type: 3}
+      propertyPath: stopPower
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3850151313224986492, guid: 76de338c970940f49a4b093cdce87d97, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.633239
@@ -329,7 +333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleSauces.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleDishes.Array.data[0]
@@ -342,7 +346,15 @@ PrefabInstance:
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleSauces.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: bd41dbed38b5fe1499010231d2af4dbe, type: 2}
+      objectReference: {fileID: 11400000, guid: 84580fb5a38f7d84bb2a0b67625d5eb0, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSauces.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: f51b6059b21924c48b857495e702ffaf, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSauces.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: f18d4db7ff3f50540bf85934cc82e45a, type: 2}
     - target: {fileID: 9156383813885622544, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: m_Name
       value: GameManager
