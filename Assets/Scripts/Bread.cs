@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bread : Ingredient
+public class Bread : Draggable
 {
-    // Start is called before the first frame update
-    void Start()
+
+    [SerializeField]
+    private Ingredient ingredient;
+
+    private float _cookedProgress = 0f;
+
+    public Ingredient GetIngredient()
     {
-        
+        return ingredient;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

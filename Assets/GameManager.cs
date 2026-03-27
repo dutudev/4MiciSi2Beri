@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     {
         if (orders.Count < 3)
         {
-            orders.Add(new Order());
+            orders.Add(new Order().Randomize());
         }
     }
 }
