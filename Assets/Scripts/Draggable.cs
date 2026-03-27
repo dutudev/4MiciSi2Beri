@@ -14,13 +14,17 @@ public class Draggable : MonoBehaviour
     private Camera _camera;
     void Start()
     {
-        _camera = Camera.main;
-        rb = GetComponent<Rigidbody2D>();
+        
     }
     void Update()
     {
         if (Input.GetMouseButtonUp(0))
         {
+            if (_camera == null || rb == null)
+            {
+                Recache();
+            }
+            rb.drag = 6;
             _dragging = false;
         }
     }
@@ -30,14 +34,22 @@ public class Draggable : MonoBehaviour
         if (_dragging)
         {
             Vector2 force;
+            if (_camera == null || rb == null)
+            {
+                Recache();
+            }
+
+            rb.drag = 3;
             force = _camera.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position;
             float stopForce = 1f;
-            if (force.magnitude <= stopSpeed)
-            {
-                stopForce = 0;
-            }
             rb.AddForce(force.normalized * moveSpeed * stopForce, ForceMode2D.Impulse);
         }
+    }
+
+    private void Recache()
+    {
+        _camera = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void OnMouseDown()
