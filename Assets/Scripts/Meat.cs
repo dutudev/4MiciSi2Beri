@@ -6,10 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Meat : Draggable
 {
-    [SerializeField] 
-    private float moveSpeed;
-    [SerializeField] 
-    private float stopSpeed;
+    
     [SerializeField] 
     private Ingredient ingredient;
     
