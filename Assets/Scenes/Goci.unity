@@ -380,21 +380,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grill
       objectReference: {fileID: 0}
-    - target: {fileID: 5073411033137797325, guid: 3dff1a69ba35f0c46b956898a99a1d77, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8266173446980399841, guid: 3dff1a69ba35f0c46b956898a99a1d77, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.1829753
+      value: -5.46
       objectReference: {fileID: 0}
     - target: {fileID: 8266173446980399841, guid: 3dff1a69ba35f0c46b956898a99a1d77, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3632548
+      value: 2.95
       objectReference: {fileID: 0}
     - target: {fileID: 8266173446980399841, guid: 3dff1a69ba35f0c46b956898a99a1d77, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.25
       objectReference: {fileID: 0}
     - target: {fileID: 8266173446980399841, guid: 3dff1a69ba35f0c46b956898a99a1d77, type: 3}
       propertyPath: m_LocalRotation.w
