@@ -15,7 +15,7 @@ public class GrillBehaviour : MonoBehaviour
     {
         foreach (Meat meat in meatOnGrill)
         {
-            meat.progress += Time.deltaTime;
+            meat.AffectCookedProgress(Time.deltaTime);
         }
     }
 }
