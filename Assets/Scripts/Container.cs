@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Container : MonoBehaviour
+public class Container : Draggable
 {
     public List<Ingredient> ingredients = new List<Ingredient>();
     // Start is called before the first frame update

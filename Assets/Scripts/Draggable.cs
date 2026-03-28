@@ -12,15 +12,13 @@ public class Draggable : MonoBehaviour
     
     private Rigidbody2D rb;
     private bool _dragging = false;
+    private bool _active = true;
     private Camera _camera;
     private Vector2 grabLocalPoint;
-    void Start()
-    {
-        
-    }
+    
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && _active)
         {
             if (_camera == null || rb == null)
             {
@@ -35,7 +33,7 @@ public class Draggable : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_dragging)
+        if (_dragging && _active)
         {
             if (_camera == null || rb == null)
                 Recache();
@@ -65,6 +63,11 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!_active)
+        {
+            return;
+        }
+        
         if (_camera == null || rb == null)
             Recache();
 
@@ -81,5 +84,15 @@ public class Draggable : MonoBehaviour
     public bool IsDragging()
     {
         return _dragging;
+    }
+
+    public void DestroyObject()
+    {
+        _active = false;
+        LeanTween.cancel(gameObject);
+        LeanTween.scale(gameObject, Vector3.zero, 0.4f).setOnComplete(() =>
+        {
+            Destroy(gameObject);
+        });
     }
 }

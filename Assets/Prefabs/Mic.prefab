@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4043869866892121232}
   - component: {fileID: 7667667208468275331}
   - component: {fileID: -1371026265245426922}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mic
   m_TagString: Meat
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 3
-  m_AngularDrag: 2
+  m_AngularDrag: 4
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   stopSpeed: 0.5
+  stopPower: 2
   ingredient: {fileID: 0}
   cookDuration: 4
   perfectDuration: 2
