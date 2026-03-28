@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Economy
 {
-    public int coins;
+    public float coins;
 }
