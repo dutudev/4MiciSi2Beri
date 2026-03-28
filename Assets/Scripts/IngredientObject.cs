@@ -6,4 +6,9 @@ public class IngredientObject : Draggable
 {
     [SerializeField] 
     private Ingredient ingredient;
+
+    public Ingredient GetIngredient()
+    {
+        return ingredient;
+    }
 }

@@ -5015,7 +5015,7 @@ MonoBehaviour:
   stopSpeed: 0.5
   rotationFixed: 0
   stopPower: 2
-  ingredient: {fileID: 0}
+  ingredient: {fileID: 11400000, guid: 3e4ca71873ce3ad4ea1e599372ba31f3, type: 2}
   cookDuration: 4
   perfectDuration: 2
   overcookDuration: 3
