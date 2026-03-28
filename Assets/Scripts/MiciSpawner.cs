@@ -11,6 +11,8 @@ public class MiciSpawner : MonoBehaviour
     private ContactFilter2D _contactFilter;
     private float _timeToSpawn = 3f;
     private Vector3 _micSpawnStartLocation = new Vector3(-5.9f, 3.4f, 0f);
+    private Vector3 _porkSpawn = new Vector3(-5.85f, 1.12f, 0);
+    private Vector3 _kabSpawn = new Vector3(-6.2f, -0.73f, 0);
     
     // Start is called before the first frame update
     void Start()
@@ -29,7 +31,18 @@ public class MiciSpawner : MonoBehaviour
         if (_timeToSpawn <= 0)
         {
             _timeToSpawn = 3f;
-            SpawnMici();
+            switch (gameObject.name)
+            {
+                case "MiciContainer":
+                    SpawnMici();
+                    break;
+                case "PorkSpawner":
+                    SpawnPork();
+                    break;
+                case "KabanosSpawner":
+                    SpawnKabanos();
+                    break;
+            }
         }
     }
 
@@ -45,6 +58,22 @@ public class MiciSpawner : MonoBehaviour
             {
                 Instantiate(micPrefab, _micSpawnStartLocation + new Vector3(0f, -0.5f, 0f) * Mathf.Floor(i / 2f)+ new Vector3(1.6f, 0, 0), Quaternion.identity);
             }
+        }
+    }
+
+    private void SpawnPork()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            Instantiate(micPrefab, _porkSpawn + new Vector3(1.42f, 0f, 0f) * i, Quaternion.identity);
+        }
+    }
+
+    private void SpawnKabanos()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Instantiate(micPrefab, _kabSpawn + new Vector3(0.53f, 0f, 0f) * i, Quaternion.identity);
         }
     }
 }
