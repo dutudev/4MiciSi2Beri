@@ -37,14 +37,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject orderName;
     [SerializeField] private GameObject orderDescription;
     [SerializeField] private GameObject timeText;
-    [SerializeField] private GameObject moneyText;
+    [SerializeField] private GameObject moneyText; // this should be tmp text 
     [SerializeField] private GameObject HoldCanvasObj;
     [SerializeField] private GameObject OrderCompletedSatisfaction;
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
+    [SerializeField] private TMP_Text timeTextTMP;
+    [SerializeField] private CameraMovement cameraMovement;
     public GameObject CounterCanvas;
     public Canvas HoldCanvas;
+    
+    
+    
     
     
     private bool _showTheMeat = false;
@@ -56,10 +61,13 @@ public class GameManager : MonoBehaviour
     
     //tween ids
     private int _counterTweenId;
+    private int _holdCanvasId;
     
     //tween objects
     [SerializeField]
     private CanvasGroup counterGroup;
+    [SerializeField] private CanvasGroup HoldCanvasGroup;
+    [SerializeField] private CanvasGroup OrderCompleted;
     void Start()
     {
         gameManager = this;
@@ -71,7 +79,7 @@ public class GameManager : MonoBehaviour
     {
         economy.coins += delta;
         _moneyEarnedToday += delta;
-        moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins} Lei";
+        moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins}";
     }
     private void EndOrder(Order order, List<Meat> meats)
     {
@@ -83,6 +91,7 @@ public class GameManager : MonoBehaviour
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(float)(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
         satisfaction = Mathf.Round(satisfaction);
+        satisfaction = Mathf.Clamp(satisfaction, 0f, 100f);
         float timeManagement = (1f - t)*100f;
         float totalScore = satisfaction*timeManagement/100;
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
@@ -97,15 +106,20 @@ public class GameManager : MonoBehaviour
         _ordersCompletedToday++;
         _happiness += satisfaction;
         _timeAdded.Remove(_orders[0]);
+        LeanTween.alphaCanvas(OrderCompleted, 1, 0.5f).setEaseOutExpo();
+        /*
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        */ // change this to leantween with canvas group
+        
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Order successfully completed!";
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: {satisfaction}%";
         OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei";
-        LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
-        LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
-        LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        LeanTween.alphaCanvas(OrderCompleted, 0, 1f).setDelay(2.5f);
+        //LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        //LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        //LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         _orders.Remove(_orders[0]);
     }
     public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
@@ -165,6 +179,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UpdateDeliveryText();
+        timeTextTMP.text = "NaN";
         if (_ordersCompletedToday > _ordersPerDay) EndDay();
         if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
@@ -172,6 +187,7 @@ public class GameManager : MonoBehaviour
         foreach (var kvp in _timeAdded)
         {
             timeText.GetComponent<TextMeshProUGUI>().text = "Time Left: "+Mathf.Round(kvp.Key.preparationTime - (Time.time - kvp.Value)).ToString()+"s";
+            timeTextTMP.text = Mathf.Round(kvp.Key.preparationTime - (Time.time - kvp.Value)).ToString() + "s";
             if (Time.time - kvp.Value >= kvp.Key.preparationTime)
             {
                 _orders.Remove(kvp.Key);
@@ -191,7 +207,7 @@ public class GameManager : MonoBehaviour
         {
             _timeAdded.Remove(o);
         }
-        if (_timeUntilOrder < 0)
+        if (_timeUntilOrder < 0 && cameraMovement.GetCounterState()) // addded the thingy for also to be on the counter screen yes
         {
             _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime);
             if (_orders.Count < _maxorders)
@@ -205,6 +221,7 @@ public class GameManager : MonoBehaviour
                 orderName.GetComponent<TextMeshProUGUI>().text = newOrder.name;
             }
         }
+        
         
         
        
@@ -242,12 +259,22 @@ public class GameManager : MonoBehaviour
     {
         _showTheMeat = set;
         _currentAsm = asmCur;
-        HoldCanvas.enabled = set;
+        
         _objects = ingredients;
         GetIngredients(ingredients);
         if (!set)
         {
             _fill = 0;
+        }
+        
+        LeanTween.cancel(_holdCanvasId);
+        if (set)
+        {
+            _holdCanvasId = LeanTween.alphaCanvas(HoldCanvasGroup, 1, 0.3f).setEaseOutExpo().id;
+        }
+        else
+        {
+            _holdCanvasId = LeanTween.alphaCanvas(HoldCanvasGroup, 0, 0.3f).setEaseOutExpo().id;
         }
     }
 
