@@ -3,37 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Order : MonoBehaviour
+public class Order
 {
     public List<Ingredient> desiredOrder = new();
     public Ingredient Sauce;
-    public int preparationTime;
+    public int preparationTime=0;
     public int price;
-
-    void EndOrder(Container c)
-    {
-        Economy.coins += price;
-        if (c.ingredients.OrderBy(x => x).SequenceEqual(desiredOrder.OrderBy(x => x)))
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-
+    public string name = NameGenerator.GetRandomName();
 
     public Order Randomize()
     {
         for (int i = 0; i< Random.Range(1, 3); i++)
         {
-            if (Sauce == null && Random.Range(1, 3) == 1) Sauce = GameManager.gameManager.possibleSauces[Random.Range(0, GameManager.gameManager.possibleSauces.Count)];
+            preparationTime += 30;
+            int sauceCount = GameManager.gameManager.possibleSauces.Count;
+            int dishCount = GameManager.gameManager.possibleDishes.Count;
+
+            int randomIndex = Random.Range(0, sauceCount + dishCount);
+
+            if (Sauce == null && randomIndex < sauceCount)
+            {
+                Sauce = GameManager.gameManager.possibleSauces[randomIndex];
+            }
             else
             {
-                Ingredient dish = GameManager.gameManager.possibleDishes[Random.Range(0, GameManager.gameManager.possibleDishes.Count)];
-                desiredOrder.Add(dish);
-                Debug.Log(dish.name);
+                int dishIndex = randomIndex - sauceCount;
+
+                if (dishIndex >= 0 && dishIndex < dishCount)
+                {
+                    Ingredient dish = GameManager.gameManager.possibleDishes[dishIndex];
+                    desiredOrder.Add(dish);
+                }
             }
         }
         return this;

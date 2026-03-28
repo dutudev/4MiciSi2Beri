@@ -1,25 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public Economy economy = new Economy();
-    public int maxOrders = 3;
-    public List<Order> orders = new List<Order>();
-    public int minOrderAppearTime=5;
-    public int maxOrderAppearTime=20;
-    // Start is called before the first frame update
-    public float timeUntilOrder = 0;
+
+    private List<Order> _todaysorders = new List<Order>();
+    private List<Order> _orders = new List<Order>();
+    private Dictionary<Order,float> _timeAdded = new Dictionary<Order, float>();
+    private float _timeUntilOrder = 0;
+
+    [SerializeField] private int _minOrderAppearTime=5;
+    [SerializeField] private int _maxOrderAppearTime =20;
+    [SerializeField] private int _maxorders = 3;
+
     public List<Ingredient> possibleSauces;
     public List<Ingredient> possibleDishes;
+
     public static GameManager gameManager;
     void Start()
     {
         gameManager = this;
     }
-
+    void EndOrder(Order order)
+    {
+        economy.coins += order.price;
+    }
+    public void ServeDish(Container container)
+    {
+        if (_orders.Any(x => x.desiredOrder.SequenceEqual(container.ingredients)))
+        {
+            Order orderToComplete = _orders.First(x => x.desiredOrder.OrderBy(x => x).SequenceEqual(container.ingredients.OrderBy(x => x)));
+            EndOrder(orderToComplete);
+        }
+    }
     public void EndDay()
     {
 
@@ -33,13 +50,28 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timeUntilOrder -= Time.deltaTime;
-        if (timeUntilOrder < 0)
+        _timeUntilOrder -= Time.deltaTime; 
+        List<Order> toRemove = new List<Order>();
+        foreach (var kvp in _timeAdded)
         {
-            timeUntilOrder = Random.Range(minOrderAppearTime, maxOrderAppearTime);
-            if (orders.Count < 3)
+            if (Time.time - kvp.Value >= kvp.Key.preparationTime)
             {
-                orders.Add(new Order().Randomize());
+                _orders.Remove(kvp.Key);
+            }
+        }
+        foreach (Order o in toRemove)
+        {
+            _timeAdded.Remove(o);
+        }
+        if (_timeUntilOrder < 0)
+        {
+            _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime);
+            if (_orders.Count < 3)
+            {
+                Order newOrder = new Order().Randomize();
+                _orders.Add(newOrder);
+                _todaysorders.Add(newOrder);
+                _timeAdded.Add(newOrder, Time.time);
             }
         }
     }

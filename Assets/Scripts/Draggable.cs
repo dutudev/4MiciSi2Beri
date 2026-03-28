@@ -13,6 +13,7 @@ public class Draggable : MonoBehaviour
     private Rigidbody2D rb;
     private bool _dragging = false;
     private Camera _camera;
+    private Vector2 grabLocalPoint;
     void Start()
     {
         
@@ -27,6 +28,7 @@ public class Draggable : MonoBehaviour
             }
             rb.drag = 6;
             _dragging = false;
+            LeanTween.scale(gameObject, Vector3.one * .5f, .3f).setEase(LeanTweenType.easeInOutCubic);
         }
     }
     public float stopPower = 2f;
@@ -38,15 +40,20 @@ public class Draggable : MonoBehaviour
             if (_camera == null || rb == null)
                 Recache();
 
-            Vector2 target = _camera.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 toTarget = target - (Vector2)transform.position;
+            Vector2 mouse = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-            float stiffness = 200f;
-            float damping = 14f;    // keep slightly under critical for soft overshoot
+            // world position of grab point on object
+            Vector2 worldGrabPoint = (Vector2)transform.TransformPoint(grabLocalPoint);
+
+            Vector2 toTarget = mouse - worldGrabPoint;
+
+            float stiffness = 250f;
+            float damping = 14f;
 
             Vector2 force = toTarget * stiffness - rb.velocity * damping;
 
-            rb.AddForce(force, ForceMode2D.Force);
+            //THIS restores torque
+            rb.AddForceAtPosition(force, worldGrabPoint, ForceMode2D.Force);
         }
     }
 
@@ -58,9 +65,19 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (_camera == null || rb == null)
+            Recache();
+
+        Vector2 mouse = _camera.ScreenToWorldPoint(Input.mousePosition);
+
+        grabLocalPoint = transform.InverseTransformPoint(mouse);
+
+        LeanTween.scale(gameObject, Vector3.one * .6f, .3f)
+            .setEase(LeanTweenType.easeOutCubic);
+
         _dragging = true;
     }
-    
+
     public bool IsDragging()
     {
         return _dragging;
