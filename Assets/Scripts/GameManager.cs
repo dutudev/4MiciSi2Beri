@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
         //LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         //LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         _orders.Remove(_orders[0]);
+        _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime); // added this here so it actaulyl owkr
     }
     public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
     {
@@ -180,7 +181,11 @@ public class GameManager : MonoBehaviour
     {
         UpdateDeliveryText();
         timeTextTMP.text = "NaN";
-        ResetOrderText();
+        if (_orders.Count == 0)
+        {
+            ResetOrderText();    
+        }
+        
         if (_ordersCompletedToday > _ordersPerDay) EndDay();
         if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
@@ -230,6 +235,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetOrderText()
     {
+        timeText.GetComponent<TextMeshProUGUI>().text = "";
         orderDescription.GetComponent<TextMeshProUGUI>().text = "Waiting for Customer";
         orderName.GetComponent<TextMeshProUGUI>().text = "No order";
     }
