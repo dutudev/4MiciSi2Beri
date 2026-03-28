@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         if (_orders.Count<=0) return;
         float satisfaction = 100f;
-        float t = (Time.time - _timeAdded[order]) / order.preparationTime;
+        float t = (Time.time - _timeAdded[_orders[0]]) / order.preparationTime;
         int wrongMain = _orders[0].desiredOrder.Where(x => !order.desiredOrder.Contains(x)).Count();
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
@@ -78,9 +78,9 @@ public class GameManager : MonoBehaviour
         money += _orders[0].Sauce == order.Sauce ? order.Sauce.price : 0;
         AddCoins(money);
         _ordersCompletedToday++;
-        _orders.Remove(order);
+        _orders.Remove(_orders[0]);
         _happiness += satisfaction;
-        _timeAdded.Remove(order);
+        _timeAdded.Remove(_orders[0]);
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
@@ -91,11 +91,15 @@ public class GameManager : MonoBehaviour
         LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
     }
-    public void ServeDish(Container container)
+    public void ServeDish(List<Ingredient> ingredients)
     {
         if (_orders.Count >0 && _orders[0]!=null)
-        { 
-            EndOrder(_orders[0]);
+        {
+            Order newOrder = new Order();
+            newOrder.desiredOrder=ingredients.Where(x=>possibleDishes.Contains(x)).ToList();
+            newOrder.desiredSides=ingredients.Where(x=>possibleSides.Contains(x)).ToList();
+            newOrder.Sauce=ingredients.Any(x=>possibleSauces.Contains(x))? ingredients.First(x => possibleSauces.Contains(x)):null;
+            EndOrder(newOrder);
         }
     }
     bool dayOngoing = true;
