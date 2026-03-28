@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(float)(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
-        satisfaction = Mathf.Round(satisfaction*(1-t));
+        satisfaction = Mathf.Round(satisfaction*(1-t/2));
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
