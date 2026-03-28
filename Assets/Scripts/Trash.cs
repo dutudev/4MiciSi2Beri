@@ -37,7 +37,7 @@ public class Trash : MonoBehaviour
         
         if (Input.GetMouseButtonUp(0))
         {
-            Debug.Log("ok");
+            
             List<Draggable> draggables = GameObject.FindObjectsByType<Draggable>(FindObjectsSortMode.None).ToList();
             foreach (var drag in draggables)
             {

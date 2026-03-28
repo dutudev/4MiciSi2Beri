@@ -23,7 +23,8 @@ public class Draggable : MonoBehaviour
     protected virtual void Start()
     {
         Vector3 scaleStart = transform.localScale;
-        //LeanTween.scale(gameObject,)
+        transform.localScale = Vector3.zero;
+        LeanTween.scale(gameObject, scaleStart, .3f).setEaseOutExpo();
     }
 
     protected virtual void Update()
@@ -116,7 +117,7 @@ public class Draggable : MonoBehaviour
         Vector2 mouse = _camera.ScreenToWorldPoint(Input.mousePosition);
 
         grabLocalPoint = transform.InverseTransformPoint(mouse);
-
+        LeanTween.cancel(gameObject);
         LeanTween.scale(gameObject, Vector3.one * .6f, .3f)
             .setEase(LeanTweenType.easeOutCubic);
 

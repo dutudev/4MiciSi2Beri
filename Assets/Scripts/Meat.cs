@@ -23,8 +23,9 @@ public class Meat : Draggable
     private Material _meatMat;
     private float _cookedProgress = 0f;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _meatMat = GetComponent<SpriteRenderer>().material;
     }
 

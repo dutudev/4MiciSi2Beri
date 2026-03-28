@@ -6,6 +6,10 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] 
     private GameObject counter;
+    [SerializeField] 
+    private List<FoodAssembler> foodAssemblers1 = new List<FoodAssembler>();
+    [SerializeField] 
+    private List<FoodAssembler> foodAssemblers2 = new List<FoodAssembler>();
     
     private int _currentState = 0;
     private bool _animatingCounter = false;
@@ -55,6 +59,21 @@ public class CameraMovement : MonoBehaviour
         }
 
         _currentState = state;
+
+        if (_currentState == 0)
+        {
+            foreach (var asm in foodAssemblers2)
+            {
+                asm.MoveObjects();
+            }
+        }
+        else
+        {
+            foreach (var asm in foodAssemblers1)
+            {
+                asm.MoveObjects();
+            }
+        }
         
         LeanTween.cancel(_idMoveX);
         _idMoveX = LeanTween.moveLocalX(gameObject, 18 * _currentState, 0.5f).setEaseOutExpo().id;
