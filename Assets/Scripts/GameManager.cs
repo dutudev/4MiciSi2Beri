@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
     private Dictionary<Order,float> _timeAdded = new Dictionary<Order, float>();
     private float _timeUntilOrder = 0;
     private float _ordersCompletedToday = 0;
+    private float _moneySpentToday = 0;
+    private float _happiness = 0;
 
     [SerializeField] private int _minOrderAppearTime=5;
     [SerializeField] private int _maxOrderAppearTime=15;
@@ -23,29 +26,45 @@ public class GameManager : MonoBehaviour
 
     public List<Ingredient> possibleSauces;
     public List<Ingredient> possibleDishes;
+    public List<Ingredient> possibleSides;
 
     public static GameManager gameManager;
 
     [SerializeField] private GameObject orderName;
     [SerializeField] private GameObject orderDescription;
     [SerializeField] private GameObject timeText;
+    [SerializeField] private GameObject moneyText;
     void Start()
     {
         gameManager = this;
+        AddCoins(200);
+    }
+    public void AddCoins(float delta)
+    {
+        economy.coins += delta;
+        moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins} Lei";
     }
     private void EndOrder(Order order)
     {
+        float satisfaction = 100f;
+        float t = (Time.time - _timeAdded[order]) / order.preparationTime;
+        satisfaction -= Mathf.InverseLerp(0.4f, 1f, t) * 10f;
+        int wrongMain = _orders[0].desiredOrder.Where(x => !order.desiredOrder.Contains(x)).Count();
+        int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
+        int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
+        satisfaction -= 90*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
         _ordersCompletedToday++;
-        economy.coins += order.price;
         _orders.Remove(order);
+        _happiness += satisfaction;
         _timeAdded.Remove(order);
     }
     public void ServeDish(Container container)
     {
-        if (_orders.Any(x => x.desiredOrder.SequenceEqual(container.ingredients)))
+        if (_orders[0]!=null)
         {
-            Order orderToComplete = _orders.First(x => x.desiredOrder.OrderBy(x => x).SequenceEqual(container.ingredients.OrderBy(x => x)));
-            EndOrder(orderToComplete);
+            AddCoins(_orders[0].price); 
+
+            EndOrder(_orders[0]);
         }
     }
     public void EndDay()

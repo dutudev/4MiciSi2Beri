@@ -6,6 +6,7 @@ using UnityEngine;
 public class Order
 {
     public List<Ingredient> desiredOrder = new();
+    public List<Ingredient> desiredSides = new();
     public Ingredient Sauce;
     public int preparationTime=20;
     public float price=0;
@@ -50,6 +51,41 @@ public class Order
                 orderDescription += $"{j}. {dish.name}\n";
                 j++;
             }
+        if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
+        {
+            Order randomOrder = GameManager.gameManager.todaysOrders[Random.Range(0, GameManager.gameManager.todaysOrders.Count)];
+            desiredSides = randomOrder.desiredSides;
+            preparationTime += randomOrder.desiredSides.Count * 10;
+            price += randomOrder.desiredSides.Sum(x => x.price);
+            orderDescription += $"{j}. Whatever Side Dishes {randomOrder.name} had\n";
+            j++;
+        }
+        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
+        {
+            var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
+            string randomKey = keys[Random.Range(0, keys.Count)];
+            Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
+            desiredSides = usualOrder.desiredSides;
+            preparationTime += usualOrder.desiredSides.Count * 10;
+            price += usualOrder.desiredSides.Sum(x => x.price);
+            name = randomKey;
+            orderDescription += $"{j}. The usual Side Dishes\n";
+        }
+        else
+            for (int i = 0; i < Random.Range(1, 3); i++)
+            {
+                preparationTime += 10;
+                int dishCount = GameManager.gameManager.possibleSides.Count;
+
+                int randomIndex = Random.Range(0, dishCount);
+                int dishIndex = randomIndex;
+
+                Ingredient dish = GameManager.gameManager.possibleSides[dishIndex];
+                desiredSides.Add(dish);
+                price += dish.price;
+                orderDescription += $"{j}. {dish.name}\n";
+                j++;
+            }
         if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Any(x=>x.Sauce!=null))
         {
 
@@ -74,8 +110,7 @@ public class Order
             j++;
         }
         else
-            for (int i = 0; i < Random.Range(0, 2); i++)
-        {
+        if (Random.Range(0, 2) == 0) {
             int sauceCount = GameManager.gameManager.possibleSauces.Count;
             int randomIndex = Random.Range(0, sauceCount);
             Sauce = GameManager.gameManager.possibleSauces[randomIndex];
@@ -84,7 +119,6 @@ public class Order
             preparationTime += 10;
             j++;
         }
-        Debug.Log(orderDescription);
         return this;
     }
 }
