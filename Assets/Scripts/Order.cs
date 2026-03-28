@@ -7,7 +7,7 @@ public class Order
 {
     public List<Ingredient> desiredOrder = new();
     public Ingredient Sauce;
-    public int preparationTime=0;
+    public int preparationTime=20;
     public float price=0;
     public string name = NameGenerator.GetRandomName();
     public string orderDescription="";
