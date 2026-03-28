@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         satisfaction = Mathf.Round(satisfaction*t);
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
-        money += _orders[0].Sauce == order.Sauce ? order.Sauce.price : 0;
+        money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
         AddCoins(money);
         _ordersCompletedToday++;
         _orders.Remove(_orders[0]);
@@ -200,7 +200,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         HoldCanvas.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && _ingredients.Count != 0)
         {
             Debug.Log("YOOOO");
             if (_fill < 1)
