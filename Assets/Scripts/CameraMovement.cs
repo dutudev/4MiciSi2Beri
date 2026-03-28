@@ -82,7 +82,8 @@ public class CameraMovement : MonoBehaviour
 
     void ShowCounter(bool show)
     {
-        
+        if (show==true) GameManager.gameManager.CounterCanvas.SetActive(true);
+        else GameManager.gameManager.CounterCanvas.SetActive(false);
         _shownCounter = !_shownCounter;
         _animatingCounter = true;
         LeanTween.cancel(_idMoveY);
