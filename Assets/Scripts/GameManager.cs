@@ -12,10 +12,12 @@ public class GameManager : MonoBehaviour
     private List<Order> _orders = new List<Order>();
     private Dictionary<Order,float> _timeAdded = new Dictionary<Order, float>();
     private float _timeUntilOrder = 0;
+    private float _ordersCompletedToday = 0;
 
     [SerializeField] private int _minOrderAppearTime=5;
     [SerializeField] private int _maxOrderAppearTime =20;
     [SerializeField] private int _maxorders = 3;
+    [SerializeField] private int _ordersPerDay = 9;
 
     public List<Ingredient> possibleSauces;
     public List<Ingredient> possibleDishes;
@@ -27,7 +29,10 @@ public class GameManager : MonoBehaviour
     }
     void EndOrder(Order order)
     {
+        _ordersCompletedToday++;
         economy.coins += order.price;
+        _orders.Remove(order);
+        _timeAdded.Remove(order);
     }
     public void ServeDish(Container container)
     {
@@ -57,6 +62,7 @@ public class GameManager : MonoBehaviour
             if (Time.time - kvp.Value >= kvp.Key.preparationTime)
             {
                 _orders.Remove(kvp.Key);
+                _ordersCompletedToday++;
             }
         }
         foreach (Order o in toRemove)

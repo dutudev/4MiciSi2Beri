@@ -33,12 +33,9 @@ public class Meat : Draggable
 
     void UpdateMeatStateTween()
     {
-
-        LeanTween.scale(gameObject, Vector3.one * .55f * (IsDragging()?1.2f:1f), .2f).setEase(LeanTweenType.easeInOutCubic)
-            .setOnComplete(() =>
-            {
-                LeanTween.scale(gameObject, Vector3.one * .5f * (IsDragging() ? 1.2f : 1f), .25f).setEase(LeanTweenType.easeOutElastic);
-            });
+        if (currentMeatState == 1) GetComponentInChildren<ParticleSystem>().Play();
+        else LeanTween.scale(gameObject, Vector3.one * .6f * (IsDragging() ? 1.2f : 1f), .2f).setEase(LeanTweenType.easeOutCubic)
+                .setLoopPingPong(2);
     }
 
     public void AffectCookedProgress(float set)
@@ -55,6 +52,8 @@ public class Meat : Draggable
             _cookedProgress = Mathf.Clamp(_cookedProgress + set / perfectDuration, 1, 2);
         }else if (_cookedProgress < 3)
         {
+            if (currentMeatState != 2) UpdateMeatStateTween();
+            currentMeatState = 2;
             _cookedProgress = Mathf.Clamp(_cookedProgress + set / overcookDuration, 2, 3);
             _meatMat.SetFloat("_overcooked", SnapToStep(_cookedProgress) - 2);
         }
