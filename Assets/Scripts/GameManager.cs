@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -34,10 +35,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject orderDescription;
     [SerializeField] private GameObject timeText;
     [SerializeField] private GameObject moneyText;
+    [SerializeField] private GameObject HoldCanvasObj;
+    public Canvas HoldCanvas;
     void Start()
     {
         gameManager = this;
         AddCoins(200);
+        HoldCanvas = HoldCanvasObj.GetComponent<Canvas>();
     }
     public void AddCoins(float delta)
     {
@@ -48,11 +52,14 @@ public class GameManager : MonoBehaviour
     {
         float satisfaction = 100f;
         float t = (Time.time - _timeAdded[order]) / order.preparationTime;
-        satisfaction -= Mathf.InverseLerp(0.4f, 1f, t) * 10f;
         int wrongMain = _orders[0].desiredOrder.Where(x => !order.desiredOrder.Contains(x)).Count();
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
-        satisfaction -= 90*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
+        satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
+        satisfaction *= t;
+        AddCoins(_orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x=>x.price));
+        AddCoins(_orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price));
+        AddCoins(_orders[0].Sauce==order.Sauce?order.Sauce.price:0);
         _ordersCompletedToday++;
         _orders.Remove(order);
         _happiness += satisfaction;
@@ -61,9 +68,7 @@ public class GameManager : MonoBehaviour
     public void ServeDish(Container container)
     {
         if (_orders[0]!=null)
-        {
-            AddCoins(_orders[0].price); 
-
+        { 
             EndOrder(_orders[0]);
         }
     }
