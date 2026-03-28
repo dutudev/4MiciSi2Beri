@@ -217,7 +217,6 @@ public class GameManager : MonoBehaviour
             {
                 ServeDish(_ingredients,_meats);
                 DestroyObjects();
-                Debug.Log("destroyed");
             }
         }
         else

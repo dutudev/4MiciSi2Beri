@@ -37,6 +37,19 @@ public class Order
             name = randomKey;
             ingredientDescriptions.Add($"My usual Main Dishes\n");
         }
+        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
+        {
+            Ingredient side = GameManager.gameManager.todaysOrders
+    .SelectMany(o => o.desiredOrder)   // flatten all lists into one sequence
+    .GroupBy(side => side)             // group identical sides
+    .OrderByDescending(g => g.Count()) // sort by frequency
+    .FirstOrDefault()?                  // take the top group (null-safe)
+    .Key;
+            desiredOrder.Add(side);
+            price += side.price;
+            preparationTime += 15;
+            ingredientDescriptions.Add($"1x The most popular Main Dish\n");
+        }
         else
             for (int i = 0; i < Random.Range(1, 5); i++)
             {
@@ -85,6 +98,19 @@ public class Order
             name = randomKey;
             ingredientDescriptions.Add($"My usual Side Dishes\n");
         }
+        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
+        {
+            Ingredient side = GameManager.gameManager.todaysOrders
+    .SelectMany(o => o.desiredSides)   // flatten all lists into one sequence
+    .GroupBy(side => side)             // group identical sides
+    .OrderByDescending(g => g.Count()) // sort by frequency
+    .FirstOrDefault()?                  // take the top group (null-safe)
+    .Key;
+            desiredSides.Add(side);
+            price += side.price;
+            preparationTime += 15;
+            ingredientDescriptions.Add($"1x The most popular Side Dish\n");
+        }
         else
             for (int i = 0; i < Random.Range(1, 3); i++)
             {
@@ -132,6 +158,7 @@ public class Order
             name = randomKey;
             price += usualOrder.Sauce.price;
             preparationTime += 15;
+<<<<<<< Updated upstream
             ingredientDescriptions.Add($"The usual Sauce\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count>0)
@@ -143,7 +170,20 @@ public class Order
     .FirstOrDefault()?.Key;
             price += Sauce.price;
             preparationTime += 15;
+=======
+>>>>>>> Stashed changes
             ingredientDescriptions.Add($"The usual Sauce\n");
+        }
+        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count>0)
+        {
+            Sauce = GameManager.gameManager.todaysOrders
+    .Where(o => o.Sauce != null)
+    .GroupBy(o => o.Sauce)
+    .OrderByDescending(g => g.Count())
+    .FirstOrDefault()?.Key;
+            price += Sauce.price;
+            preparationTime += 15;
+            ingredientDescriptions.Add($"The most popular Sauce\n");
         }
         else
         if (Random.Range(0, 2) == 0) {
