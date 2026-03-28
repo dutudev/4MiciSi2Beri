@@ -91,6 +91,8 @@ public class GameManager : MonoBehaviour
         AddCoins(money*1.25f);
         foreach (var x2 in meats)
             Debug.Log(x2.GetIngredient().name.ToString());
+        foreach (var x2 in _orders[0].desiredOrder)
+            Debug.Log(x2.name.ToString());
         Debug.Log(wrongMain);
         Debug.Log(wrongSauce);
         Debug.Log(wrongSides);
