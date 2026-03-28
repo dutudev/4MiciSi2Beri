@@ -6,9 +6,6 @@ public class TrashBehaviour : MonoBehaviour
 {
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Container"))
-        {
-            Destroy(other);
-        }
+        Destroy(other);
     }
 }
