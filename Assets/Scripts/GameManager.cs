@@ -18,12 +18,14 @@ public class GameManager : MonoBehaviour
     private float _timeUntilOrder = 0;
     private float _ordersCompletedToday = 0;
     private float _moneySpentToday = 0;
+    private float _moneyEarnedToday = 0;
     private float _happiness = 0;
 
     [SerializeField] private int _minOrderAppearTime=5;
     [SerializeField] private int _maxOrderAppearTime=15;
     [SerializeField] private int _maxorders = 1;
-    [SerializeField] private int _ordersPerDay = 9;
+    [SerializeField] private int _ordersPerDay = 4;
+    [SerializeField] private int _day = 0;
 
     public List<Ingredient> possibleSauces;
     public List<Ingredient> possibleDishes;
@@ -39,16 +41,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedSatisfaction;
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
+    [SerializeField] private GameObject dayCounter;
     public Canvas HoldCanvas;
     void Start()
     {
         gameManager = this;
         AddCoins(200);
         HoldCanvas = HoldCanvasObj.GetComponent<Canvas>();
+        StartDay();
     }
     public void AddCoins(float delta)
     {
         economy.coins += delta;
+        _moneyEarnedToday += delta;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins} Lei";
     }
     private void EndOrder(Order order)
@@ -85,19 +90,37 @@ public class GameManager : MonoBehaviour
             EndOrder(_orders[0]);
         }
     }
+    bool dayOngoing = true;
     public void EndDay()
     {
-
+        dayOngoing = false;
+        _orders.Clear();
+        todaysOrders.Clear();
+        _ordersCompletedToday = 0;
+        _moneySpentToday = 0;
+        _happiness = 0;
     }
 
     public void StartDay()
     {
-
+        _timeUntilOrder = 0;
+        _moneyEarnedToday = 0;
+        dayOngoing=true;
+        _day++;
+        dayCounter.GetComponent<TextMeshProUGUI>().text = _day.ToString();
+        LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 1, 1.5f)
+            .setOnComplete(() =>
+            {
+                LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 0, 1.5f)
+                .setDelay(4);
+            });
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_ordersCompletedToday > _ordersPerDay) EndDay();
+        if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
         List<Order> toRemove = new List<Order>();
         foreach (var kvp in _timeAdded)
