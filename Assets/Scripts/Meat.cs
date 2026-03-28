@@ -31,7 +31,7 @@ public class Meat : Draggable
 
     float SnapToStep(float value)
     {
-        return Mathf.Round(value / 0.2f) * 0.2f;
+        return Mathf.Round(value / 0.05f) * 0.05f;
     }
 
     void UpdateMeatStateTween()

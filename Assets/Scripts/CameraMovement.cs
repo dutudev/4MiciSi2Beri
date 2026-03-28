@@ -91,4 +91,10 @@ public class CameraMovement : MonoBehaviour
             _animatingCounter = false;
         }).id;
     }
+
+    public bool GetCounterState()
+    {
+        return _shownCounter;
+    }
+
 }
