@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
+    [SerializeField] private GameObject spriteCustomers;
+    public Dictionary<string, GameObject> nameToCustomer;
     public GameObject CounterCanvas;
     public Canvas HoldCanvas;
     
