@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public Economy economy = new Economy();
 
-    private List<Order> _todaysorders = new List<Order>();
+    public Dictionary<string,Order> nameToOrder = new Dictionary<string, Order>();
+    public List<Order> todaysOrders = new List<Order>();
     private List<Order> _orders = new List<Order>();
     private Dictionary<Order,float> _timeAdded = new Dictionary<Order, float>();
     private float _timeUntilOrder = 0;
@@ -76,7 +77,8 @@ public class GameManager : MonoBehaviour
             {
                 Order newOrder = new Order().Randomize();
                 _orders.Add(newOrder);
-                _todaysorders.Add(newOrder);
+                todaysOrders.Add(newOrder);
+                nameToOrder.Add(newOrder.name, newOrder);
                 _timeAdded.Add(newOrder, Time.time);
             }
         }
