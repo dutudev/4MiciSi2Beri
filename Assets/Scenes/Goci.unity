@@ -1034,11 +1034,11 @@ PrefabInstance:
       objectReference: {fileID: 1201831955}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleSides.Array.size
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleDishes.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleSauces.Array.size
@@ -1047,7 +1047,27 @@ PrefabInstance:
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleSides.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: f51b6059b21924c48b857495e702ffaf, type: 2}
+      objectReference: {fileID: 11400000, guid: fc27f656c1103a9499745c02e3073ae1, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSides.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 86b799aebf99f35469fee954ce9c1bca, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSides.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 86022bfd1d5964d4aa7efa61b107f1c7, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSides.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: be01eb65af337f54b9dbee826f9cbaed, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSides.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: bd41dbed38b5fe1499010231d2af4dbe, type: 2}
+    - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
+      propertyPath: possibleSides.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: bd41dbed38b5fe1499010231d2af4dbe, type: 2}
     - target: {fileID: 7497007371532225811, guid: f49d7d297b992d742bde9e5ec0423dfa, type: 3}
       propertyPath: possibleDishes.Array.data[0]
       value: 
