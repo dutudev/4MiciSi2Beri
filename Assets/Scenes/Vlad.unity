@@ -1146,6 +1146,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f18d4db7ff3f50540bf85934cc82e45a, type: 2}
   possibleDishes:
   - {fileID: 11400000, guid: 3e4ca71873ce3ad4ea1e599372ba31f3, type: 2}
+  - {fileID: 11400000, guid: cacc46196e5763b40933a5121889a663, type: 2}
+  - {fileID: 11400000, guid: 2d0269bd273131d4ba0de4dbfdd8e02a, type: 2}
   possibleSides:
   - {fileID: 11400000, guid: fc27f656c1103a9499745c02e3073ae1, type: 2}
   - {fileID: 11400000, guid: 86b799aebf99f35469fee954ce9c1bca, type: 2}
@@ -1156,11 +1158,11 @@ MonoBehaviour:
   orderName: {fileID: 2774135656038997421}
   orderDescription: {fileID: 7310392293230415580}
   timeText: {fileID: 759239479074445949}
-  moneyText: {fileID: 5777274460208435233}
+  moneyText: {fileID: 7970692245156856140}
   HoldCanvasObj: {fileID: 532293014416486459}
   OrderCompletedSatisfaction: {fileID: 1518642492697847722}
   OrderCompletedTitle: {fileID: 36674812298185514}
-  OrderCompletedMoney: {fileID: 7970692245156856140}
+  OrderCompletedMoney: {fileID: 5777274460208435233}
   dayCounter: {fileID: 1543766407}
   CounterCanvas: {fileID: 6835683723119325404}
   HoldCanvas: {fileID: 0}
