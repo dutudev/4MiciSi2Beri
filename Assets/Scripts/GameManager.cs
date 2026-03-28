@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
-        AddCoins(money);
+        AddCoins(money*1.25f);
         _ordersCompletedToday++;
         _happiness += satisfaction;
         _timeAdded.Remove(_orders[0]);
