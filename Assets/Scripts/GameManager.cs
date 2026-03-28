@@ -75,7 +75,9 @@ public class GameManager : MonoBehaviour
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(float)(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
-        satisfaction = Mathf.Round(satisfaction*(1-t/2));
+        satisfaction = Mathf.Round(satisfaction);
+        float timeManagement = (1f - t)*100f;
+        float totalScore = satisfaction*timeManagement/100;
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
@@ -240,6 +242,7 @@ public class GameManager : MonoBehaviour
     public void GetIngredients(List<GameObject> list)
     {
         _ingredients.Clear();
+        _meats.Clear();
         foreach (var obj in list)
         {
             if (obj.GetComponent<Meat>() != null)
