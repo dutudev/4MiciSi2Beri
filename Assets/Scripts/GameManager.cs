@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     private string _currentAsm;
     private float _fill = 0;
     private List<Ingredient> _ingredients = new List<Ingredient>();
+    private List<Meat> _meats = new List<Meat>();
     void Start()
     {
         gameManager = this;
@@ -63,12 +64,12 @@ public class GameManager : MonoBehaviour
         _moneyEarnedToday += delta;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins} Lei";
     }
-    private void EndOrder(Order order)
+    private void EndOrder(Order order, List<Meat> meats)
     {
         if (_orders.Count<=0) return;
         float satisfaction = 100f;
         float t = (Time.time - _timeAdded[_orders[0]]) / order.preparationTime;
-        int wrongMain = _orders[0].desiredOrder.Where(x => !order.desiredOrder.Contains(x)).Count();
+        int wrongMain = _orders[0].desiredOrder.Where(x => !meats.Any(x2=>x2.GetIngredient()==x&&x2.isCookedWell())).Count();
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
@@ -78,7 +79,6 @@ public class GameManager : MonoBehaviour
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
         AddCoins(money);
         _ordersCompletedToday++;
-        _orders.Remove(_orders[0]);
         _happiness += satisfaction;
         _timeAdded.Remove(_orders[0]);
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
@@ -86,20 +86,20 @@ public class GameManager : MonoBehaviour
         OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Order successfully completed!";
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: {satisfaction}%";
-        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei%";
+        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei";
         LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        _orders.Remove(_orders[0]);
     }
-    public void ServeDish(List<Ingredient> ingredients)
+    public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
     {
         if (_orders.Count >0 && _orders[0]!=null)
         {
             Order newOrder = new Order();
             newOrder.desiredOrder=ingredients.Where(x=>possibleDishes.Contains(x)).ToList();
-            newOrder.desiredSides=ingredients.Where(x=>possibleSides.Contains(x)).ToList();
             newOrder.Sauce=ingredients.Any(x=>possibleSauces.Contains(x))? ingredients.First(x => possibleSauces.Contains(x)):null;
-            EndOrder(newOrder);
+            EndOrder(newOrder,meats);
         }
     }
     bool dayOngoing = true;
@@ -200,7 +200,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         HoldCanvas.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetKey(KeyCode.E) && _ingredients.Count != 0)
+        if (Input.GetKey(KeyCode.E) && (_ingredients.Count != 0 || _meats.Count != 0))
         {
             Debug.Log("YOOOO");
             if (_fill < 1)
@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                ServeDish(_ingredients);
+                ServeDish(_ingredients,_meats);
             }
         }
         else
@@ -240,7 +240,7 @@ public class GameManager : MonoBehaviour
         {
             if (obj.GetComponent<Meat>() != null)
             {
-                _ingredients.Add(obj.GetComponent<Meat>().GetIngredient());
+                _meats.Add(obj.GetComponent<Meat>());
             }else if (obj.GetComponent<IngredientObject>() != null)
             {
                 _ingredients.Add(obj.GetComponent<IngredientObject>().GetIngredient());

@@ -71,5 +71,8 @@ public class Meat : Draggable
         return ingredient;
     }
 
-    
+    public bool isCookedWell()
+    {
+        return currentMeatState == 1;
+    }
 }
