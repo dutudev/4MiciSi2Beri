@@ -138,7 +138,7 @@ public class Draggable : MonoBehaviour
     {
         _active = false;
         LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, Vector3.zero, 0.4f).setOnComplete(() =>
+        LeanTween.scale(gameObject, Vector3.zero, 0.4f).setEaseOutExpo().setOnComplete(() =>
         {
             Destroy(gameObject);
         });

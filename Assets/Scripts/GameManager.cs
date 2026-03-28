@@ -260,7 +260,7 @@ public class GameManager : MonoBehaviour
         {
             GameObject obj = _objects[i];
             _objects.RemoveAt(i);
-            Destroy(obj);
+            obj.GetComponent<Draggable>().DestroyObject();
         }
     }
 
