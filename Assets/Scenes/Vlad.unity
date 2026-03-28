@@ -1162,6 +1162,7 @@ MonoBehaviour:
   OrderCompletedTitle: {fileID: 36674812298185514}
   OrderCompletedMoney: {fileID: 7970692245156856140}
   dayCounter: {fileID: 1543766407}
+  CounterCanvas: {fileID: 6835683723119325404}
   HoldCanvas: {fileID: 0}
 --- !u!4 &454258653
 Transform:
@@ -5120,7 +5121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 691.57623, y: 181.87387}
+  m_AnchoredPosition: {x: 190.96967, y: -41.503647}
   m_SizeDelta: {x: 380.83, y: 316.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3679147356527132068
@@ -5354,7 +5355,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 674.6065, y: 392.3775}
+  m_AnchoredPosition: {x: 174, y: 169}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6007692133266749738
@@ -5972,7 +5973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 691.57623, y: 234.47777}
+  m_AnchoredPosition: {x: 190.96967, y: 11.10025}
   m_SizeDelta: {x: 380.83, y: 220.96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7970692245156856140
