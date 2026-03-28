@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateDeliveryText();
         timeTextTMP.text = "NaN";
+        ResetOrderText();
         if (_ordersCompletedToday > _ordersPerDay) EndDay();
         if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
@@ -225,6 +226,12 @@ public class GameManager : MonoBehaviour
         
         
        
+    }
+
+    private void ResetOrderText()
+    {
+        orderDescription.GetComponent<TextMeshProUGUI>().text = "Waiting for Customer";
+        orderName.GetComponent<TextMeshProUGUI>().text = "No order";
     }
 
     private void UpdateDeliveryText()

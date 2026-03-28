@@ -154,6 +154,15 @@ public class Order
         }
         for (int i = 0; i < ingredientDescriptions.Count; i++)
             orderDescription += $"- {ingredientDescriptions[i]}";
-        return this;
+        /* Will fix this later
+        if (GameManager.gameManager.nameToCustomer[name])
+        {// put customer
+
+        }
+        else
+        {// generate random customer
+
+        }*/
+            return this;
     }
 }
