@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour
@@ -43,6 +44,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
     public Canvas HoldCanvas;
+    
+    
+    private bool _showTheMeat = false;
+    private string _currentAsm;
+    private float _fill = 0;
+    private List<Ingredient> _ingredients = new List<Ingredient>();
     void Start()
     {
         gameManager = this;
@@ -136,6 +143,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateDeliveryText();
         if (_ordersCompletedToday > _ordersPerDay) EndDay();
         if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
@@ -176,5 +184,69 @@ public class GameManager : MonoBehaviour
                 orderName.GetComponent<TextMeshProUGUI>().text = newOrder.name;
             }
         }
+        
+        
+       
+    }
+
+    private void UpdateDeliveryText()
+    {
+        if (!_showTheMeat)
+        {
+            return;
+        }
+        HoldCanvas.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (Input.GetKey(KeyCode.E))
+        {
+            Debug.Log("YOOOO");
+            if (_fill < 1)
+            {
+                //GameManager.gameManager.ServeDish();
+                _fill += Time.deltaTime / 2.5f;
+            }
+            else
+            {
+                ServeDish(_ingredients);
+            }
+        }
+        else
+        {
+            _fill = 0;
+        }
+        HoldCanvas.GetComponentInChildren<Image>().fillAmount = Mathf.Clamp(_fill,0,1);
+    }
+    
+    
+    public void ShowDeliveryText(bool set, string asmCur, List<GameObject> ingredients)
+    {
+        _showTheMeat = set;
+        _currentAsm = asmCur;
+        HoldCanvas.enabled = set;
+        GetIngredients(ingredients);
+        if (!set)
+        {
+            _fill = 0;
+        }
+    }
+
+    public void GetIngredients(List<GameObject> list)
+    {
+        _ingredients.Clear();
+        foreach (var obj in list)
+        {
+            if (obj.GetComponent<Meat>() != null)
+            {
+                _ingredients.Add(obj.GetComponent<Meat>().GetIngredient());
+            }else if (obj.GetComponent<IngredientObject>() != null)
+            {
+                _ingredients.Add(obj.GetComponent<IngredientObject>().GetIngredient());
+            }
+            
+        }
+    }
+
+    public string GetCurrentAsm()
+    {
+        return _currentAsm;
     }
 }
