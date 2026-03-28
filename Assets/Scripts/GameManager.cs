@@ -53,6 +53,13 @@ public class GameManager : MonoBehaviour
     private List<Ingredient> _ingredients = new List<Ingredient>();
     private List<Meat> _meats = new List<Meat>();
     private List<GameObject> _objects = new List<GameObject>();
+    
+    //tween ids
+    private int _counterTweenId;
+    
+    //tween objects
+    [SerializeField]
+    private CanvasGroup counterGroup;
     void Start()
     {
         gameManager = this;
@@ -274,5 +281,22 @@ public class GameManager : MonoBehaviour
     public string GetCurrentAsm()
     {
         return _currentAsm;
+    }
+
+    public void ShowCounterCanvas(bool show)
+    {
+        LeanTween.cancel(_counterTweenId);
+        if (show)
+        {
+            counterGroup.gameObject.SetActive(true);
+            _counterTweenId = LeanTween.alphaCanvas(counterGroup, 1, 0.5f).setEaseOutExpo().id;
+        }
+        else
+        {
+            _counterTweenId = LeanTween.alphaCanvas(counterGroup, 0, 0.5f).setEaseOutExpo().setOnComplete(() =>
+            {
+                counterGroup.gameObject.SetActive(false);
+            }).id;
+        }
     }
 }
