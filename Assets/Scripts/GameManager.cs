@@ -18,12 +18,14 @@ public class GameManager : MonoBehaviour
     private float _timeUntilOrder = 0;
     private float _ordersCompletedToday = 0;
     private float _moneySpentToday = 0;
+    private float _moneyEarnedToday = 0;
     private float _happiness = 0;
 
     [SerializeField] private int _minOrderAppearTime=5;
     [SerializeField] private int _maxOrderAppearTime=15;
     [SerializeField] private int _maxorders = 1;
-    [SerializeField] private int _ordersPerDay = 9;
+    [SerializeField] private int _ordersPerDay = 4;
+    [SerializeField] private int _day = 0;
 
     public List<Ingredient> possibleSauces;
     public List<Ingredient> possibleDishes;
@@ -36,16 +38,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject timeText;
     [SerializeField] private GameObject moneyText;
     [SerializeField] private GameObject HoldCanvasObj;
+    [SerializeField] private GameObject OrderCompletedSatisfaction;
+    [SerializeField] private GameObject OrderCompletedTitle;
+    [SerializeField] private GameObject OrderCompletedMoney;
+    [SerializeField] private GameObject dayCounter;
     public Canvas HoldCanvas;
     void Start()
     {
         gameManager = this;
         AddCoins(200);
         HoldCanvas = HoldCanvasObj.GetComponent<Canvas>();
+        StartDay();
     }
     public void AddCoins(float delta)
     {
         economy.coins += delta;
+        _moneyEarnedToday += delta;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins} Lei";
     }
     private void EndOrder(Order order)
@@ -56,14 +64,24 @@ public class GameManager : MonoBehaviour
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
-        satisfaction *= t;
-        AddCoins(_orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x=>x.price));
-        AddCoins(_orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price));
-        AddCoins(_orders[0].Sauce==order.Sauce?order.Sauce.price:0);
+        satisfaction = Mathf.Round(satisfaction*t);
+        float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
+        money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
+        money += _orders[0].Sauce == order.Sauce ? order.Sauce.price : 0;
+        AddCoins(money);
         _ordersCompletedToday++;
         _orders.Remove(order);
         _happiness += satisfaction;
         _timeAdded.Remove(order);
+        OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Order successfully completed!";
+        OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: {satisfaction}%";
+        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei%";
+        LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
     }
     public void ServeDish(Container container)
     {
@@ -72,19 +90,37 @@ public class GameManager : MonoBehaviour
             EndOrder(_orders[0]);
         }
     }
+    bool dayOngoing = true;
     public void EndDay()
     {
-
+        dayOngoing = false;
+        _orders.Clear();
+        todaysOrders.Clear();
+        _ordersCompletedToday = 0;
+        _moneySpentToday = 0;
+        _happiness = 0;
     }
 
     public void StartDay()
     {
-
+        _timeUntilOrder = 0;
+        _moneyEarnedToday = 0;
+        dayOngoing=true;
+        _day++;
+        dayCounter.GetComponent<TextMeshProUGUI>().text = _day.ToString();
+        LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 1, 1.5f)
+            .setOnComplete(() =>
+            {
+                LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 0, 1.5f)
+                .setDelay(4);
+            });
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_ordersCompletedToday > _ordersPerDay) EndDay();
+        if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
         List<Order> toRemove = new List<Order>();
         foreach (var kvp in _timeAdded)
@@ -94,6 +130,15 @@ public class GameManager : MonoBehaviour
             {
                 _orders.Remove(kvp.Key);
                 _ordersCompletedToday++;
+                OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Time Ran out!";
+                OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: 0%";
+                OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+0 Lei%";
+                LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+                LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+                LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
             }
         }
         foreach (Order o in toRemove)
