@@ -7,81 +7,24 @@ public static class NameGenerator
 {
     public static readonly string[] CommonFirstNames = new string[]
     {
-        "James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles",
-        "Daniel","Matthew","Anthony","Mark","Steven","Paul","Andrew","Joshua","Kenneth","Kevin",
-        "Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan","Jacob","Gary",
-        "Nicholas","Eric","Jonathan","Stephen","Larry","Justin","Scott","Brandon","Benjamin","Samuel",
-        "Gregory","Alexander","Patrick","Frank","Raymond","Jack","Dennis","Jerry","Tyler","Aaron",
-        "Henry","Douglas","Peter","Nathan","Zachary","Kyle","Adam","Carl","Arthur"
+        "Andrei","Alexandru","Mihai","Ion","Vasile","Daniel","Gabriel","Adrian","Cristian","Florin",
+        "George","Ionu?","Marian","Nicolae","C?t?lin","Claudiu","Dumitru","Emil","Eugen","Lauren?iu",
+        "Lucian","Marius","Ovidiu","Paul","Radu","Robert","Sorin","?tefan","Tudor","Valentin",
+        "Victor","Alin","Bogdan","Ciprian","Constantin","Costin","Drago?","Gheorghe","Ilie","Iulian",
+        "Liviu","Octavian","Petru","Rare?","Silviu","Teodor","Viorel","Aurel","Cornel","Darius",
+        "Emanuel","Hora?iu","Leontin","Marcel","Nicu","Sebastian","Traian","Virgil"
     };
+
     public static readonly string[] CommonSurnames = new string[]
     {
-        "Smith",
-        "Johnson",
-        "Williams",
-        "Brown",
-        "Jones",
-        "Garcia",
-        "Miller",
-        "Davis",
-        "Rodriguez",
-        "Martinez",
-
-        "Hernandez",
-        "Lopez",
-        "Gonzalez",
-        "Wilson",
-        "Anderson",
-        "Thomas",
-        "Taylor",
-        "Moore",
-        "Jackson",
-        "Martin",
-
-        "Lee",
-        "Perez",
-        "Thompson",
-        "White",
-        "Harris",
-        "Sanchez",
-        "Clark",
-        "Ramirez",
-        "Lewis",
-        "Robinson",
-
-        "Walker",
-        "Young",
-        "Allen",
-        "King",
-        "Wright",
-        "Scott",
-        "Torres",
-        "Nguyen",
-        "Hill",
-        "Flores",
-
-        "Green",
-        "Adams",
-        "Nelson",
-        "Baker",
-        "Hall",
-        "Rivera",
-        "Campbell",
-        "Mitchell",
-        "Carter",
-        "Roberts",
-
-        "Gomez",
-        "Phillips",
-        "Evans",
-        "Turner",
-        "Diaz",
-        "Parker",
-        "Cruz",
-        "Edwards",
-        "Collins",
-        "Reyes"
+        "Popescu","Ionescu","Popa","Stan","Dumitrescu","Georgescu","Marin","Voicu","Dobre","Moldovan",
+        "Ilie","Radu","Munteanu","Stoica","Preda","Lazar","Matei","Constantinescu","Diaconu","Petrescu",
+        "Serban","Barbu","Neagu","Florea","Albu","Enache","Dragomir","Coman","Manole","Toma",
+        "Badea","Costache","Cristea","Grigore","Sandu","Pavel","Voinea","Oprea","Anghel","Mihalache",
+        "Stancu","Nistor","Rosu","Dascalu","Pop","Moraru","Morar","Ardelean","Chirila","Fieraru",
+        "Cojocaru","Avram","Balan","Filip","Hagi","Ignat","Jianu","Lungu","Mazilu","Onofrei"
     };
+
     public static HashSet<string> namesGenerated = new HashSet<string>();
 
     public static string GetRandomName()

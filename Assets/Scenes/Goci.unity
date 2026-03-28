@@ -345,7 +345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2702390882139767, guid: 76de338c970940f49a4b093cdce87d97, type: 3}
       propertyPath: EmissionModule.enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3096369797264658498, guid: 76de338c970940f49a4b093cdce87d97, type: 3}
       propertyPath: m_SortingOrder

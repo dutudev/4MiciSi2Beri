@@ -78,8 +78,10 @@ public class GameManager : MonoBehaviour
                 Order newOrder = new Order().Randomize();
                 _orders.Add(newOrder);
                 todaysOrders.Add(newOrder);
-                nameToOrder.Add(newOrder.name, newOrder);
+                nameToOrder[newOrder.name]= newOrder;
                 _timeAdded.Add(newOrder, Time.time);
+                Debug.Log(newOrder.orderDescription);
+                Debug.Log(newOrder.name);
             }
         }
     }
