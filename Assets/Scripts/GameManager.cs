@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject timeText;
     [SerializeField] private GameObject moneyText;
     [SerializeField] private GameObject HoldCanvasObj;
+    [SerializeField] private GameObject OrderCompletedSatisfaction;
+    [SerializeField] private GameObject OrderCompletedTitle;
+    [SerializeField] private GameObject OrderCompletedMoney;
     public Canvas HoldCanvas;
     void Start()
     {
@@ -56,14 +59,24 @@ public class GameManager : MonoBehaviour
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
-        satisfaction *= t;
-        AddCoins(_orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x=>x.price));
-        AddCoins(_orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price));
-        AddCoins(_orders[0].Sauce==order.Sauce?order.Sauce.price:0);
+        satisfaction = Mathf.Round(satisfaction*t);
+        float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
+        money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
+        money += _orders[0].Sauce == order.Sauce ? order.Sauce.price : 0;
+        AddCoins(money);
         _ordersCompletedToday++;
         _orders.Remove(order);
         _happiness += satisfaction;
         _timeAdded.Remove(order);
+        OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Order successfully completed!";
+        OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: {satisfaction}%";
+        OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei%";
+        LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+        LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
     }
     public void ServeDish(Container container)
     {
@@ -94,6 +107,15 @@ public class GameManager : MonoBehaviour
             {
                 _orders.Remove(kvp.Key);
                 _ordersCompletedToday++;
+                OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedMoney.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+                OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Time Ran out!";
+                OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: 0%";
+                OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+0 Lei%";
+                LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+                LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
+                LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
             }
         }
         foreach (Order o in toRemove)
