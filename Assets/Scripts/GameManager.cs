@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
         satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
         satisfaction = Mathf.Round(satisfaction*t);
+        Debug.Log(wrongMain);
+        Debug.Log(wrongSides);
+        Debug.Log(wrongSauce);
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
@@ -99,7 +102,8 @@ public class GameManager : MonoBehaviour
         if (_orders.Count >0 && _orders[0]!=null)
         {
             Order newOrder = new Order();
-            newOrder.desiredOrder=ingredients.Where(x=>possibleDishes.Contains(x)).ToList();
+            newOrder.desiredOrder=meats.Select(x=>x.GetIngredient()).ToList();
+            newOrder.desiredSides = ingredients.Where(x => possibleSides.Contains(x)).ToList();
             newOrder.Sauce=ingredients.Any(x=>possibleSauces.Contains(x))? ingredients.First(x => possibleSauces.Contains(x)):null;
             EndOrder(newOrder,meats);
         }
@@ -204,7 +208,6 @@ public class GameManager : MonoBehaviour
         HoldCanvas.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetKey(KeyCode.E) && (_ingredients.Count != 0 || _meats.Count != 0))
         {
-            Debug.Log("YOOOO");
             if (_fill < 1)
             {
                 //GameManager.gameManager.ServeDish();

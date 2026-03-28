@@ -10,7 +10,7 @@ public class Order
     public List<Ingredient> desiredOrder = new();
     public List<Ingredient> desiredSides = new();
     public Ingredient Sauce;
-    public int preparationTime=20;
+    public int preparationTime=25;
     public float price=0;
     public string name = NameGenerator.GetRandomName();
     private List<string> ingredientDescriptions = new();
@@ -22,7 +22,7 @@ public class Order
         {
             Order randomOrder = GameManager.gameManager.todaysOrders[Random.Range(0, GameManager.gameManager.todaysOrders.Count)];
             desiredOrder=randomOrder.desiredOrder;
-            preparationTime += randomOrder.desiredOrder.Count * 10;
+            preparationTime += randomOrder.desiredOrder.Count * 15;
             price += randomOrder.desiredOrder.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Main Dishes {randomOrder.name} had\n");
         }
@@ -32,7 +32,7 @@ public class Order
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
             desiredOrder = usualOrder.desiredOrder;
-            preparationTime += usualOrder.desiredOrder.Count*10;
+            preparationTime += usualOrder.desiredOrder.Count*15;
             price += usualOrder.desiredOrder.Sum(x => x.price);
             name = randomKey;
             ingredientDescriptions.Add($"My usual Main Dishes\n");
@@ -40,7 +40,7 @@ public class Order
         else
             for (int i = 0; i < Random.Range(1, 5); i++)
             {
-                preparationTime += 10;
+                preparationTime += 15;
                 int dishCount = GameManager.gameManager.possibleDishes.Count;
 
                 int randomIndex = Random.Range(0, dishCount);
@@ -70,7 +70,7 @@ public class Order
         {
             Order randomOrder = GameManager.gameManager.todaysOrders[Random.Range(0, GameManager.gameManager.todaysOrders.Count)];
             desiredSides = randomOrder.desiredSides;
-            preparationTime += randomOrder.desiredSides.Count * 10;
+            preparationTime += randomOrder.desiredSides.Count * 15;
             price += randomOrder.desiredSides.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Side Dishes {randomOrder.name} had\n");
         }
@@ -80,7 +80,7 @@ public class Order
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
             desiredSides = usualOrder.desiredSides;
-            preparationTime += usualOrder.desiredSides.Count * 10;
+            preparationTime += usualOrder.desiredSides.Count * 15;
             price += usualOrder.desiredSides.Sum(x => x.price);
             name = randomKey;
             ingredientDescriptions.Add($"My usual Side Dishes\n");
@@ -88,7 +88,7 @@ public class Order
         else
             for (int i = 0; i < Random.Range(1, 3); i++)
             {
-                preparationTime += 10;
+                preparationTime += 15;
                 int dishCount = GameManager.gameManager.possibleSides.Count;
 
                 int randomIndex = Random.Range(0, dishCount);
@@ -120,7 +120,7 @@ public class Order
             Order randomOrder = ordersWithSauce[Random.Range(0, ordersWithSauce.Count)];
             Sauce = randomOrder.Sauce;
             price += randomOrder.Sauce.price;
-            preparationTime += 10;
+            preparationTime += 15;
             ingredientDescriptions.Add($"Whatever Sauce {randomOrder.name} had\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
@@ -131,7 +131,18 @@ public class Order
             Sauce = usualOrder.Sauce;
             name = randomKey;
             price += usualOrder.Sauce.price;
-            preparationTime += 10;
+            preparationTime += 15;
+            ingredientDescriptions.Add($"The usual Sauce\n");
+        }
+        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count>0)
+        {
+            Sauce = GameManager.gameManager.todaysOrders
+    .Where(o => o.Sauce != null)
+    .GroupBy(o => o.Sauce)
+    .OrderByDescending(g => g.Count())
+    .FirstOrDefault()?.Key;
+            price += Sauce.price;
+            preparationTime += 15;
             ingredientDescriptions.Add($"The usual Sauce\n");
         }
         else
