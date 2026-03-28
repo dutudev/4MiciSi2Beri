@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    [SerializeField] 
+    private GameObject counter;
+    
     private int _currentState = 0;
+    private bool _animatingCounter = false;
+    private bool _shownCounter = false;
+
+    private int _idMoveX;
+    private int _idMoveY;
+    
 
     void Update()
     {
@@ -17,10 +26,22 @@ public class CameraMovement : MonoBehaviour
         {
             ChangeState(_currentState - 1);
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ShowCounter(!_shownCounter);
+        }
+        
+        counter.transform.position = new Vector3(transform.position.x, 10.14f, 0);
     }
 
     void ChangeState(int state)
     {
+        if (_shownCounter || _animatingCounter)
+        {
+            return;
+        }
+        
         if (state < 0)
         {
             _currentState = 0;
@@ -35,8 +56,20 @@ public class CameraMovement : MonoBehaviour
 
         _currentState = state;
         
-        LeanTween.cancel(gameObject);
-        LeanTween.moveLocalX(gameObject, 18 * _currentState, 0.5f).setEaseOutExpo();
+        LeanTween.cancel(_idMoveX);
+        _idMoveX = LeanTween.moveLocalX(gameObject, 18 * _currentState, 0.5f).setEaseOutExpo().id;
 
+    }
+
+    void ShowCounter(bool show)
+    {
+        
+        _shownCounter = !_shownCounter;
+        _animatingCounter = true;
+        LeanTween.cancel(_idMoveY);
+        _idMoveY = LeanTween.moveLocalY(gameObject, 10.16f * (show?1:0), 0.5f).setEaseOutExpo().setOnComplete(() =>
+        {
+            _animatingCounter = false;
+        }).id;
     }
 }
