@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class Order
 {
@@ -11,10 +13,10 @@ public class Order
     public int preparationTime=20;
     public float price=0;
     public string name = NameGenerator.GetRandomName();
+    private List<string> ingredientDescriptions = new();
     public string orderDescription="";
     public Order Randomize()
     {
-        int j = 1;
         name = NameGenerator.GetRandomName();
         if (Random.Range(1, 5) == 1&&GameManager.gameManager.todaysOrders.Count>0)
         {
@@ -22,8 +24,7 @@ public class Order
             desiredOrder=randomOrder.desiredOrder;
             preparationTime += randomOrder.desiredOrder.Count * 10;
             price += randomOrder.desiredOrder.Sum(x => x.price);
-            orderDescription += $"{j}. Whatever Main Dishes {randomOrder.name} had\n";
-            j++;
+            ingredientDescriptions.Add($"Whatever Main Dishes {randomOrder.name} had\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
         {
@@ -34,7 +35,7 @@ public class Order
             preparationTime += usualOrder.desiredOrder.Count*10;
             price += usualOrder.desiredOrder.Sum(x => x.price);
             name = randomKey;
-            orderDescription += $"{j}. The usual Main Dishes\n";
+            ingredientDescriptions.Add($"The usual Main Dishes\n");
         }
         else
             for (int i = 0; i < Random.Range(1, 5); i++)
@@ -48,8 +49,22 @@ public class Order
                 Ingredient dish = GameManager.gameManager.possibleDishes[dishIndex];
                 desiredOrder.Add(dish);
                 price += dish.price;
-                orderDescription += $"{j}. {dish.name}\n";
-                j++;
+
+                if (ingredientDescriptions.Any(x => x.Contains($"{dish.name}\n")))
+                {
+                    string desc = ingredientDescriptions.Find(x => x.Contains($"{dish.name}\n"));
+                    int index = ingredientDescriptions.IndexOf(desc);
+
+                    ingredientDescriptions[index] = Regex.Replace(desc, @"\b(\d+)x\s", match =>
+                    {
+                        int n = int.Parse(match.Groups[1].Value);
+                        return (n + 1) + "x ";
+                    });
+                }
+                else
+                {
+                    ingredientDescriptions.Add($"1x {dish.name}\n");
+                }
             }
         if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
         {
@@ -57,8 +72,7 @@ public class Order
             desiredSides = randomOrder.desiredSides;
             preparationTime += randomOrder.desiredSides.Count * 10;
             price += randomOrder.desiredSides.Sum(x => x.price);
-            orderDescription += $"{j}. Whatever Side Dishes {randomOrder.name} had\n";
-            j++;
+            ingredientDescriptions.Add($"Whatever Side Dishes {randomOrder.name} had\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
         {
@@ -69,7 +83,7 @@ public class Order
             preparationTime += usualOrder.desiredSides.Count * 10;
             price += usualOrder.desiredSides.Sum(x => x.price);
             name = randomKey;
-            orderDescription += $"{j}. The usual Side Dishes\n";
+            ingredientDescriptions.Add($"The usual Side Dishes\n");
         }
         else
             for (int i = 0; i < Random.Range(1, 3); i++)
@@ -83,8 +97,21 @@ public class Order
                 Ingredient dish = GameManager.gameManager.possibleSides[dishIndex];
                 desiredSides.Add(dish);
                 price += dish.price;
-                orderDescription += $"{j}. {dish.name}\n";
-                j++;
+                if (ingredientDescriptions.Any(x => x.Contains($"{dish.name}\n")))
+                {
+                    string desc = ingredientDescriptions.Find(x => x.Contains($"{dish.name}\n"));
+                    int index = ingredientDescriptions.IndexOf(desc);
+
+                    ingredientDescriptions[index] = Regex.Replace(desc, @"\b(\d+)x\s", match =>
+                    {
+                        int n = int.Parse(match.Groups[1].Value);
+                        return (n + 1) + "x ";
+                    });
+                }
+                else
+                {
+                    ingredientDescriptions.Add($"1x {dish.name}\n");
+                }
             }
         if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Any(x=>x.Sauce!=null))
         {
@@ -94,8 +121,7 @@ public class Order
             Sauce = randomOrder.Sauce;
             price += randomOrder.Sauce.price;
             preparationTime += 10;
-            orderDescription += $"{j}. Whatever Sauce {randomOrder.name} had\n";
-            j++;
+            ingredientDescriptions.Add($"Whatever Sauce {randomOrder.name} had\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
         {
@@ -106,19 +132,17 @@ public class Order
             name = randomKey;
             price += usualOrder.Sauce.price;
             preparationTime += 10;
-            orderDescription += $"{j}. The usual Sauce\n";
-            j++;
+            ingredientDescriptions.Add($"The usual Sauce\n");
         }
         else
         if (Random.Range(0, 2) == 0) {
             int sauceCount = GameManager.gameManager.possibleSauces.Count;
             int randomIndex = Random.Range(0, sauceCount);
             Sauce = GameManager.gameManager.possibleSauces[randomIndex];
-            orderDescription += $"{j}. {Sauce.name}\n";
-            price += Sauce.price;
-            preparationTime += 10;
-            j++;
+            ingredientDescriptions.Add($"{Sauce.name}\n");
         }
+        for (int i = 0; i < ingredientDescriptions.Count; i++)
+            orderDescription += $"- {ingredientDescriptions[i]}";
         return this;
     }
 }
