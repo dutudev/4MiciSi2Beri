@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     }
     private void EndOrder(Order order)
     {
+        if (_orders.Count<=0) return;
         float satisfaction = 100f;
         float t = (Time.time - _timeAdded[order]) / order.preparationTime;
         int wrongMain = _orders[0].desiredOrder.Where(x => !order.desiredOrder.Contains(x)).Count();
@@ -85,7 +86,7 @@ public class GameManager : MonoBehaviour
     }
     public void ServeDish(Container container)
     {
-        if (_orders[0]!=null)
+        if (_orders.Count >0 && _orders[0]!=null)
         { 
             EndOrder(_orders[0]);
         }
@@ -108,11 +109,27 @@ public class GameManager : MonoBehaviour
         dayOngoing=true;
         _day++;
         dayCounter.GetComponent<TextMeshProUGUI>().text = _day.ToString();
-        LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 1, 1.5f)
+        var tmp = dayCounter.GetComponent<TextMeshProUGUI>();
+
+        tmp.alpha = 0;
+
+        LeanTween.value(dayCounter, 0f, 1f, 1.5f)
+            .setOnUpdate((float val) =>
+            {
+                var c = tmp.color;
+                c.a = val;
+                tmp.color = c;
+            })
             .setOnComplete(() =>
             {
-                LeanTween.alphaText(dayCounter.GetComponent<RectTransform>(), 0, 1.5f)
-                .setDelay(4);
+                LeanTween.value(dayCounter, 1f, 0f, 1.5f)
+                    .setDelay(4f)
+                    .setOnUpdate((float val) =>
+                    {
+                        var c = tmp.color;
+                        c.a = val;
+                        tmp.color = c;
+                    });
             });
     }
 
