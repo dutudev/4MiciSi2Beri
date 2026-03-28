@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     private float _ordersCompletedToday = 0;
 
     [SerializeField] private int _minOrderAppearTime=5;
-    [SerializeField] private int _maxOrderAppearTime =20;
-    [SerializeField] private int _maxorders = 3;
+    [SerializeField] private int _maxOrderAppearTime=15;
+    [SerializeField] private int _maxorders = 1;
     [SerializeField] private int _ordersPerDay = 9;
 
     public List<Ingredient> possibleSauces;
