@@ -158,20 +158,6 @@ public class Order
             name = randomKey;
             price += usualOrder.Sauce.price;
             preparationTime += 15;
-<<<<<<< Updated upstream
-            ingredientDescriptions.Add($"The usual Sauce\n");
-        }
-        else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count>0)
-        {
-            Sauce = GameManager.gameManager.todaysOrders
-    .Where(o => o.Sauce != null)
-    .GroupBy(o => o.Sauce)
-    .OrderByDescending(g => g.Count())
-    .FirstOrDefault()?.Key;
-            price += Sauce.price;
-            preparationTime += 15;
-=======
->>>>>>> Stashed changes
             ingredientDescriptions.Add($"The usual Sauce\n");
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Count>0)

@@ -70,15 +70,12 @@ public class GameManager : MonoBehaviour
     {
         if (_orders.Count<=0) return;
         float satisfaction = 100f;
-        float t = (Time.time - _timeAdded[_orders[0]]) / order.preparationTime;
+        float t = (Time.time - _timeAdded[_orders[0]]) / _orders[0].preparationTime;
         int wrongMain = _orders[0].desiredOrder.Where(x => !meats.Any(x2=>x2.GetIngredient()==x&&x2.isCookedWell())).Count();
         int wrongSides = _orders[0].desiredSides.Where(x => !order.desiredSides.Contains(x)).Count();
         int wrongSauce = _orders[0].Sauce == order.Sauce ? 0 : 1;
-        satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
-        satisfaction = Mathf.Round(satisfaction*t);
-        Debug.Log(wrongMain);
-        Debug.Log(wrongSides);
-        Debug.Log(wrongSauce);
+        satisfaction -= 100*(wrongMain + wrongSauce + wrongSides)/(float)(_orders[0].desiredOrder.Count+ _orders[0].desiredSides.Count+(order.Sauce==null?0:1));
+        satisfaction = Mathf.Round(satisfaction*(1-t));
         float money = _orders[0].desiredOrder.Where(x => order.desiredOrder.Contains(x)).Sum(x => x.price);
         money += _orders[0].desiredSides.Where(x => order.desiredSides.Contains(x)).Sum(x => x.price);
         money += (_orders[0].Sauce == order.Sauce && order.Sauce != null) ? order.Sauce.price : 0;
