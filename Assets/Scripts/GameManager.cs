@@ -216,6 +216,8 @@ public class GameManager : MonoBehaviour
             else
             {
                 ServeDish(_ingredients,_meats);
+                DestroyObjects();
+                Debug.Log("destroyed");
             }
         }
         else
@@ -231,6 +233,7 @@ public class GameManager : MonoBehaviour
         _showTheMeat = set;
         _currentAsm = asmCur;
         HoldCanvas.enabled = set;
+        _objects = ingredients;
         GetIngredients(ingredients);
         if (!set)
         {
@@ -251,6 +254,16 @@ public class GameManager : MonoBehaviour
                 _ingredients.Add(obj.GetComponent<IngredientObject>().GetIngredient());
             }
             
+        }
+    }
+
+    public void DestroyObjects()
+    {
+        for (int i = _objects.Count - 1; i >= 0; i--)
+        {
+            GameObject obj = _objects[i];
+            _objects.RemoveAt(i);
+            obj.GetComponent<Draggable>().DestroyObject();
         }
     }
 
