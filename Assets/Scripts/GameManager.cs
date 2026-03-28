@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject orderName;
     [SerializeField] private GameObject orderDescription;
+    [SerializeField] private GameObject timeText;
     void Start()
     {
         gameManager = this;
@@ -64,8 +65,7 @@ public class GameManager : MonoBehaviour
         List<Order> toRemove = new List<Order>();
         foreach (var kvp in _timeAdded)
         {
-            Debug.Log(Time.time - kvp.Value);
-            Debug.Log(kvp.Key.preparationTime);
+            timeText.GetComponent<TextMeshProUGUI>().text = "Time Left: "+Mathf.Round(kvp.Key.preparationTime - (Time.time - kvp.Value)).ToString()+"s";
             if (Time.time - kvp.Value >= kvp.Key.preparationTime)
             {
                 _orders.Remove(kvp.Key);

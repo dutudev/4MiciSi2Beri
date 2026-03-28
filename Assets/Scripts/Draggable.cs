@@ -1,21 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Draggable : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     private float moveSpeed;
-    [SerializeField] 
+    [SerializeField]
     private float stopSpeed;
-    
+
+    [SerializeField]
+    private bool rotationFixed = false; // <-- NEW
+
     private Rigidbody2D rb;
     private bool _dragging = false;
     private bool _active = true;
     private Camera _camera;
     private Vector2 grabLocalPoint;
-    
+
     void Update()
     {
         if (Input.GetMouseButtonUp(0) && _active)
@@ -26,9 +26,11 @@ public class Draggable : MonoBehaviour
             }
             rb.drag = 6;
             _dragging = false;
-            LeanTween.scale(gameObject, Vector3.one * .5f, .3f).setEase(LeanTweenType.easeInOutCubic);
+            LeanTween.scale(gameObject, Vector3.one * .5f, .3f)
+                .setEase(LeanTweenType.easeInOutCubic);
         }
     }
+
     public float stopPower = 2f;
 
     void FixedUpdate()
@@ -40,9 +42,7 @@ public class Draggable : MonoBehaviour
 
             Vector2 mouse = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-            // world position of grab point on object
             Vector2 worldGrabPoint = (Vector2)transform.TransformPoint(grabLocalPoint);
-
             Vector2 toTarget = mouse - worldGrabPoint;
 
             float stiffness = 250f;
@@ -50,8 +50,19 @@ public class Draggable : MonoBehaviour
 
             Vector2 force = toTarget * stiffness - rb.velocity * damping;
 
-            //THIS restores torque
-            rb.AddForceAtPosition(force, worldGrabPoint, ForceMode2D.Force);
+            if (rotationFixed)
+            {
+                // Apply force at center  no torque
+                rb.AddForce(force, ForceMode2D.Force);
+
+                // Extra safety: cancel any existing rotation
+                rb.angularVelocity = 0f;
+            }
+            else
+            {
+                // Normal behavior with torque
+                rb.AddForceAtPosition(force, worldGrabPoint, ForceMode2D.Force);
+            }
         }
     }
 
@@ -59,6 +70,9 @@ public class Draggable : MonoBehaviour
     {
         _camera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
+
+        // Apply rotation constraint when caching
+        rb.freezeRotation = rotationFixed;
     }
 
     private void OnMouseDown()
@@ -67,7 +81,7 @@ public class Draggable : MonoBehaviour
         {
             return;
         }
-        
+
         if (_camera == null || rb == null)
             Recache();
 
