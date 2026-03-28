@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
+    public GameObject CounterCanvas;
     public Canvas HoldCanvas;
     
     
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
     private float _fill = 0;
     private List<Ingredient> _ingredients = new List<Ingredient>();
     private List<Meat> _meats = new List<Meat>();
+    private List<GameObject> _objects = new List<GameObject>();
     void Start()
     {
         gameManager = this;
