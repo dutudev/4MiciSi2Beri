@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e8e79a3448e09e43b62758ce53bb378, type: 3}
   m_Name: Pork
   m_EditorClassIdentifier: 
-  name: Meat
-  price: 6.8
+  name: Porkchop
+  price: 7.6
   sprite: {fileID: 0}
