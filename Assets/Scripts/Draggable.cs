@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Draggable : MonoBehaviour
@@ -17,13 +18,18 @@ public class Draggable : MonoBehaviour
     private Camera _camera;
     private Vector2 grabLocalPoint;
     private int _baseOrder;
-    
+
+
+    protected virtual void Start()
+    {
+        Vector3 scaleStart = transform.localScale;
+        //LeanTween.scale(gameObject,)
+    }
 
     protected virtual void Update()
     {
         if (Input.GetMouseButtonUp(0) && _active)
         {
-            Debug.Log("Yo");
             DropObj();
         }
         
@@ -120,6 +126,11 @@ public class Draggable : MonoBehaviour
     public bool IsDragging()
     {
         return _dragging;
+    }
+
+    public void SetDragStatus(bool set)
+    {
+        _dragging = set;
     }
 
     public void DestroyObject()
