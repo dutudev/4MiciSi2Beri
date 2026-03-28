@@ -15,6 +15,8 @@ public class Meat : Draggable
     private float perfectDuration;
     [SerializeField] 
     private float overcookDuration;
+    [SerializeField] 
+    private ParticleSystem particles;
 
     int currentMeatState=0;
 
@@ -33,9 +35,9 @@ public class Meat : Draggable
 
     void UpdateMeatStateTween()
     {
-        if (currentMeatState == 1) GetComponentInChildren<ParticleSystem>().Play();
-        else LeanTween.scale(gameObject, Vector3.one * .6f * (IsDragging() ? 1.2f : 1f), .2f).setEase(LeanTweenType.easeOutCubic)
-                .setLoopPingPong(2);
+        
+        LeanTween.scale(gameObject, Vector3.one * .6f * (IsDragging() ? 1.2f : 1f), .2f).setEase(LeanTweenType.easeOutCubic)
+                .setLoopPingPong(1);
     }
 
     public void AffectCookedProgress(float set)
@@ -56,6 +58,10 @@ public class Meat : Draggable
             currentMeatState = 2;
             _cookedProgress = Mathf.Clamp(_cookedProgress + set / overcookDuration, 2, 3);
             _meatMat.SetFloat("_overcooked", SnapToStep(_cookedProgress) - 2);
+        }else if (currentMeatState == 2)
+        {
+            GetComponentInChildren<ParticleSystem>().Play();
+            currentMeatState = 3;  
         }
     }
 
