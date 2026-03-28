@@ -11,24 +11,37 @@ public class Draggable : MonoBehaviour
     private bool rotationFixed = false; // <-- NEW
 
     private Rigidbody2D rb;
+    private SpriteRenderer _spriteRenderer;
     private bool _dragging = false;
     private bool _active = true;
     private Camera _camera;
     private Vector2 grabLocalPoint;
+    private int _baseOrder;
+    
 
-    void Update()
+    protected virtual void Update()
     {
         if (Input.GetMouseButtonUp(0) && _active)
         {
-            if (_camera == null || rb == null)
-            {
-                Recache();
-            }
-            rb.drag = 6;
-            _dragging = false;
-            LeanTween.scale(gameObject, Vector3.one * .5f, .3f)
-                .setEase(LeanTweenType.easeInOutCubic);
+            Debug.Log("Yo");
+            DropObj();
         }
+        
+    }
+
+
+
+    protected virtual void DropObj()
+    {
+        if (_camera == null || rb == null)
+        {
+            Recache();
+        }
+        rb.drag = 6;
+        _dragging = false;
+        LeanTween.scale(gameObject, Vector3.one * .5f, .3f)
+            .setEase(LeanTweenType.easeInOutCubic);
+        _spriteRenderer.sortingOrder = 1;
     }
 
     public float stopPower = 2f;
@@ -70,12 +83,19 @@ public class Draggable : MonoBehaviour
     {
         _camera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
-
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        
         // Apply rotation constraint when caching
         rb.freezeRotation = rotationFixed;
     }
 
     private void OnMouseDown()
+    {
+        Pickup();
+    }
+
+    protected virtual void Pickup()
     {
         if (!_active)
         {
@@ -85,6 +105,8 @@ public class Draggable : MonoBehaviour
         if (_camera == null || rb == null)
             Recache();
 
+        _spriteRenderer.sortingOrder = 10;
+        
         Vector2 mouse = _camera.ScreenToWorldPoint(Input.mousePosition);
 
         grabLocalPoint = transform.InverseTransformPoint(mouse);

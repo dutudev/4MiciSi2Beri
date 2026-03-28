@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SauceContainer : Draggable
+{
+    private int _rotId;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+    protected override void Pickup()
+    {
+        base.Pickup();
+        LeanTween.cancel(gameObject, _rotId);
+        _rotId = LeanTween.rotateZ(gameObject, 180, 0.3f).setEaseOutExpo().id;
+        Debug.Log("Yo gurt");
+    }
+
+    protected override void DropObj()
+    {
+        
+        base.DropObj();
+        LeanTween.cancel(gameObject, _rotId);
+        _rotId = LeanTween.rotateZ(gameObject, 0, 0.3f).setEaseOutExpo().id;
+        
+    }
+    
+}
