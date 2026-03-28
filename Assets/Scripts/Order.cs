@@ -44,13 +44,10 @@ public class Order
                 int randomIndex = Random.Range(0, dishCount);
                 int dishIndex = randomIndex;
 
-                if (dishIndex >= 0 && dishIndex < dishCount)
-                {
-                    Ingredient dish = GameManager.gameManager.possibleDishes[dishIndex];
-                    desiredOrder.Add(dish);
-                    price += dish.price;
-                    orderDescription += $"{j}. {dish.name}\n";
-                }
+                Ingredient dish = GameManager.gameManager.possibleDishes[dishIndex];
+                desiredOrder.Add(dish);
+                price += dish.price;
+                orderDescription += $"{j}. {dish.name}\n";
                 j++;
             }
         if (Random.Range(1, 5) == 1 && GameManager.gameManager.todaysOrders.Any(x=>x.Sauce!=null))
@@ -61,7 +58,7 @@ public class Order
             Sauce = randomOrder.Sauce;
             price += randomOrder.Sauce.price;
             preparationTime += 10;
-            orderDescription = $"{j}. Whatever Sauce {randomOrder.name} had\n";
+            orderDescription += $"{j}. Whatever Sauce {randomOrder.name} had\n";
             j++;
         }
         else if (Random.Range(1, 5) == 1 && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
@@ -73,7 +70,7 @@ public class Order
             name = randomKey;
             price += usualOrder.Sauce.price;
             preparationTime += 10;
-            orderDescription = $"{j}. The usual Sauce\n";
+            orderDescription += $"{j}. The usual Sauce\n";
             j++;
         }
         else
@@ -84,8 +81,10 @@ public class Order
             Sauce = GameManager.gameManager.possibleSauces[randomIndex];
             orderDescription += $"{j}. {Sauce.name}\n";
             price += Sauce.price;
+            preparationTime += 10;
             j++;
         }
+        Debug.Log(orderDescription);
         return this;
     }
 }

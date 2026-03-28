@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -24,11 +25,14 @@ public class GameManager : MonoBehaviour
     public List<Ingredient> possibleDishes;
 
     public static GameManager gameManager;
+
+    [SerializeField] private GameObject orderName;
+    [SerializeField] private GameObject orderDescription;
     void Start()
     {
         gameManager = this;
     }
-    void EndOrder(Order order)
+    private void EndOrder(Order order)
     {
         _ordersCompletedToday++;
         economy.coins += order.price;
@@ -60,6 +64,8 @@ public class GameManager : MonoBehaviour
         List<Order> toRemove = new List<Order>();
         foreach (var kvp in _timeAdded)
         {
+            Debug.Log(Time.time - kvp.Value);
+            Debug.Log(kvp.Key.preparationTime);
             if (Time.time - kvp.Value >= kvp.Key.preparationTime)
             {
                 _orders.Remove(kvp.Key);
@@ -73,15 +79,15 @@ public class GameManager : MonoBehaviour
         if (_timeUntilOrder < 0)
         {
             _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime);
-            if (_orders.Count < 3)
+            if (_orders.Count < _maxorders)
             {
                 Order newOrder = new Order().Randomize();
                 _orders.Add(newOrder);
                 todaysOrders.Add(newOrder);
                 nameToOrder[newOrder.name]= newOrder;
                 _timeAdded.Add(newOrder, Time.time);
-                Debug.Log(newOrder.orderDescription);
-                Debug.Log(newOrder.name);
+                orderDescription.GetComponent<TextMeshProUGUI>().text = newOrder.orderDescription;
+                orderName.GetComponent<TextMeshProUGUI>().text = newOrder.name;
             }
         }
     }
