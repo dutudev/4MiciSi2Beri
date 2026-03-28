@@ -38,7 +38,7 @@ public class Order
             ingredientDescriptions.Add($"My usual Main Dishes\n");
         }
         else
-            for (int i = 0; i < Random.Range(1, 10); i++)
+            for (int i = 0; i < Random.Range(1, 5); i++)
             {
                 preparationTime += 15;
                 int dishCount = GameManager.gameManager.possibleDishes.Count;

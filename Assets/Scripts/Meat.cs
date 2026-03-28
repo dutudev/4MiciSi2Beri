@@ -66,6 +66,10 @@ public class Meat : Draggable
         }
     }
 
+    public void SetIngredient(Ingredient ingredient2)
+    {
+        ingredient = ingredient2;
+    }
     public Ingredient GetIngredient()
     {
         return ingredient;
@@ -73,6 +77,7 @@ public class Meat : Draggable
 
     public bool isCookedWell()
     {
+        Debug.Log(currentMeatState);
         return currentMeatState == 1;
     }
 }
