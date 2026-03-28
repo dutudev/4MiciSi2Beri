@@ -35,7 +35,7 @@ public class Order
             preparationTime += usualOrder.desiredOrder.Count*10;
             price += usualOrder.desiredOrder.Sum(x => x.price);
             name = randomKey;
-            ingredientDescriptions.Add($"The usual Main Dishes\n");
+            ingredientDescriptions.Add($"My usual Main Dishes\n");
         }
         else
             for (int i = 0; i < Random.Range(1, 5); i++)
@@ -83,7 +83,7 @@ public class Order
             preparationTime += usualOrder.desiredSides.Count * 10;
             price += usualOrder.desiredSides.Sum(x => x.price);
             name = randomKey;
-            ingredientDescriptions.Add($"The usual Side Dishes\n");
+            ingredientDescriptions.Add($"My usual Side Dishes\n");
         }
         else
             for (int i = 0; i < Random.Range(1, 3); i++)
