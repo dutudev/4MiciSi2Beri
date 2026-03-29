@@ -43,16 +43,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
-    [SerializeField] private GameObject spriteCustomers;
-    public Dictionary<string, GameObject> nameToCustomer;
+    public List<GameObject> spriteCustomers;
+    private GameObject currentCustomerObj;
+    public Dictionary<string, int> nameToCustomer;
     [SerializeField] private TMP_Text timeTextTMP;
     [SerializeField] private CameraMovement cameraMovement;
     public GameObject CounterCanvas;
     public Canvas HoldCanvas;
-    
-    
-    
-    
     
     private bool _showTheMeat = false;
     private string _currentAsm;
@@ -124,13 +121,15 @@ public class GameManager : MonoBehaviour
     }
     public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
     {
-        if (_orders.Count >0 && _orders[0]!=null)
+        if (_orders.Count >0 && _orders[0]!=null && currentCustomerObj!=null)
         {
             Order newOrder = new Order();
             newOrder.desiredOrder=meats.Select(x=>x.GetIngredient()).ToList();
             newOrder.desiredSides = ingredients.Where(x => possibleSides.Contains(x)).ToList();
             newOrder.Sauce=ingredients.Any(x=>possibleSauces.Contains(x))? ingredients.First(x => possibleSauces.Contains(x)):null;
             EndOrder(newOrder,meats);
+            currentCustomerObj.SetActive(false);
+            currentCustomerObj = null;
         }
     }
     bool dayOngoing = true;
@@ -219,6 +218,17 @@ public class GameManager : MonoBehaviour
                 _timeAdded.Add(newOrder, Time.time);
                 orderDescription.GetComponent<TextMeshProUGUI>().text = newOrder.orderDescription;
                 orderName.GetComponent<TextMeshProUGUI>().text = newOrder.name;
+                if (nameToCustomer.ContainsKey(name))
+                {// put customer
+                    spriteCustomers[nameToCustomer[name]].SetActive(true);
+                    currentCustomerObj = spriteCustomers[nameToCustomer[name]];
+                }
+                else
+                {// generate random customer
+                    nameToCustomer[name] = Random.Range(0, spriteCustomers.Count);
+                    spriteCustomers[nameToCustomer[name]].SetActive(true);
+                    currentCustomerObj = spriteCustomers[nameToCustomer[name]];
+                }
             }
         }
         
@@ -238,7 +248,7 @@ public class GameManager : MonoBehaviour
         {
             if (_fill < 1)
             {
-                //GameManager.gameManager.ServeDish();
+                //ServeDish();
                 _fill += Time.deltaTime / 2.5f;
             }
             else
