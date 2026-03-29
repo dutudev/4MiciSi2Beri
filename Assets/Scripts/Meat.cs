@@ -79,20 +79,20 @@ public class Meat : Draggable
     {
         float x = _cookedProgress;
         // Between 2 and 3 ? return 2
-        if (x > 2f && x < 3f)
-            return 2f;
+        if (x > 1f && x < 2f)
+            return 1;
 
         // Lerp from 0 ? 1 as x goes 1.5 ? 2
-        if (x >= 1.5f && x <= 2f)
+        if (x >= 0.5f && x <= 1f)
         {
-            float t = (x - 1.5f) / (2f - 1.5f); // normalize to 0–1
+            float t = (x - 0.5f) / (1f - 0.5f); // normalize to 0–1
             return Mathf.Lerp(0f, 1f, t);
         }
 
         // Lerp from 1 ? 0 as x goes 3 ? 3.5
-        if (x >= 3f && x <= 3.5f)
+        if (x >= 2f && x <= 2.5f)
         {
-            float t = (x - 3f) / (3.5f - 3f); // normalize to 0–1
+            float t = (x - 2f) / (2.5f - 2f); // normalize to 0–1
             return Mathf.Lerp(1f, 0f, t);
         }
 
