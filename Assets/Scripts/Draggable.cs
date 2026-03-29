@@ -18,7 +18,7 @@ public class Draggable : MonoBehaviour
     private Camera _camera;
     private Vector2 grabLocalPoint;
     private int _baseOrder;
-
+    private bool _clicked = false;
 
     protected virtual void Start()
     {
@@ -109,6 +109,12 @@ public class Draggable : MonoBehaviour
             return;
         }
 
+        if (!_clicked)
+        {
+            _clicked = true;
+            ClickedFirstTime();
+        }
+
         if (_camera == null || rb == null)
             Recache();
 
@@ -131,6 +137,14 @@ public class Draggable : MonoBehaviour
 
     public void SetDragStatus(bool set)
     {
+        if (set == true)
+        {
+            if (!_clicked)
+            {
+                _clicked = true;
+                ClickedFirstTime();
+            }
+        }
         _dragging = set;
     }
 
@@ -143,4 +157,10 @@ public class Draggable : MonoBehaviour
             Destroy(gameObject);
         });
     }
+
+    protected virtual void ClickedFirstTime()
+    {
+        
+    }
+    
 }

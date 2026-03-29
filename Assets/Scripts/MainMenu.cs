@@ -21,4 +21,14 @@ public class MainMenu : MonoBehaviour
     {
         logo.transform.localPosition = new Vector3(logo.transform.localPosition.x, logoRange * Mathf.Sin(Time.time * logoSpeed), logo.transform.localPosition.z);
     }
+
+    public void StartGame()
+    {
+        SceneManagerTransition.instance.MoveToScene("Vlad");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

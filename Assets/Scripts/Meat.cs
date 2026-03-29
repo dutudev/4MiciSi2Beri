@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -22,6 +23,7 @@ public class Meat : Draggable
 
     private Material _meatMat;
     private float _cookedProgress = 0f;
+    
 
     protected override void Start()
     {
@@ -79,5 +81,10 @@ public class Meat : Draggable
     {
         Debug.Log(currentMeatState);
         return currentMeatState == 1;
+    }
+
+    protected override void ClickedFirstTime()
+    {
+        GameManager.gameManager.SubtractMoneyWithText(ingredient.price);
     }
 }

@@ -11,4 +11,9 @@ public class IngredientObject : Draggable
     {
         return ingredient;
     }
+    
+    protected override void ClickedFirstTime()
+    {
+        GameManager.gameManager.SubtractMoneyWithText(ingredient.price);
+    }
 }

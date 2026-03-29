@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text timeTextTMP;
     [SerializeField] private CameraMovement cameraMovement;
     [SerializeField] private TMP_Text endText;
+    [SerializeField] private GameObject priceText;
+    [SerializeField] private GameObject priceTextParent;
     public GameObject CounterCanvas;
     public Canvas HoldCanvas;
     
@@ -66,6 +68,8 @@ public class GameManager : MonoBehaviour
     //tween ids
     private int _counterTweenId;
     private int _holdCanvasId;
+    private int _orderDoneId;
+    private int _orderDoneId2;
     
     //tween objects
     [SerializeField]
@@ -87,6 +91,14 @@ public class GameManager : MonoBehaviour
         _moneyEarnedToday += delta;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins}";
     }
+
+    public void PayCoins(float coins)
+    {
+        economy.coins -= coins;
+        _moneySpentToday += coins;
+        moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins}";
+    }
+    
     private void EndOrder(Order order, List<Meat> meats)
     {
         if (_orders.Count<=0) return;
@@ -110,7 +122,7 @@ public class GameManager : MonoBehaviour
         _ordersCompletedToday++;
         _happiness += satisfaction;
         _timeAdded.Remove(_orders[0]);
-        LeanTween.alphaCanvas(OrderCompleted, 1, 0.5f).setEaseOutExpo();
+        _orderDoneId = LeanTween.alphaCanvas(OrderCompleted, 1, 0.5f).setEaseOutExpo().id;
         /*
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
@@ -120,7 +132,7 @@ public class GameManager : MonoBehaviour
         OrderCompletedTitle.GetComponent<TextMeshProUGUI>().text = "Order successfully completed!";
         OrderCompletedSatisfaction.GetComponent<TextMeshProUGUI>().text = $"Satisfaction Rate: {satisfaction}%";
         OrderCompletedMoney.GetComponent<TextMeshProUGUI>().text = $"+{money} Lei";
-        LeanTween.alphaCanvas(OrderCompleted, 0, 1f).setDelay(2.5f);
+        _orderDoneId2 = LeanTween.alphaCanvas(OrderCompleted, 0, 1f).setDelay(2.5f).id;
         //LeanTween.alphaText(OrderCompletedTitle.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         //LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         //LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
@@ -158,6 +170,8 @@ public class GameManager : MonoBehaviour
         endDayMenu.gameObject.SetActive(true);
         endDayMenu.alpha = 0;
         LeanTween.alphaCanvas(endDayMenu, 1, 1).setEaseOutExpo().setIgnoreTimeScale(true);
+        LeanTween.cancel(_orderDoneId);
+        LeanTween.cancel(_orderDoneId2);
     }
 
     public void StartDay()
@@ -397,5 +411,16 @@ public class GameManager : MonoBehaviour
     public void GoToMenu()
     {
         SceneManagerTransition.instance.MoveToScene("MainMenu");
+    }
+
+    public void SubtractMoneyWithText(float price)
+    {
+        PayCoins(price);
+        var texty = Instantiate(priceText, Vector3.zero, Quaternion.identity, priceTextParent.transform);
+        texty.GetComponent<TMP_Text>().text = "-" + price;
+        texty.transform.localPosition = new Vector3(-260.8f, -199.5f, 0f);
+        LeanTween.moveLocalY(texty, -136.7f, 1).setEaseOutCubic();
+        var group = texty.GetComponent<CanvasGroup>();
+        LeanTween.alphaCanvas(group, 0, 0.4f).setDelay(0.6f);
     }
 }
