@@ -114,6 +114,8 @@ public class Draggable : MonoBehaviour
             _clicked = true;
             ClickedFirstTime();
         }
+        
+        AudioManager.instance.PlaySoundOnce(3);
 
         if (_camera == null || rb == null)
             Recache();

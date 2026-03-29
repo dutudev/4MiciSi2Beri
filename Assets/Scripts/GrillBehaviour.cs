@@ -24,6 +24,10 @@ public class GrillBehaviour : MonoBehaviour
         if (collision.gameObject.CompareTag("Meat") && !meatOnGrill.Contains(collision.gameObject.GetComponent<Meat>()))
         {
             meatOnGrill.Add(collision.gameObject.GetComponent<Meat>());
+            if (meatOnGrill.Count > 0)
+            {
+                AudioManager.instance.StartLoop(true);
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -31,7 +35,10 @@ public class GrillBehaviour : MonoBehaviour
         if (collision.gameObject.CompareTag("Meat") && meatOnGrill.Contains(collision.gameObject.GetComponent<Meat>()))
         {
             meatOnGrill.Remove(collision.gameObject.GetComponent<Meat>());
-
+            if (meatOnGrill.Count == 0)
+            {
+                AudioManager.instance.StartLoop(false);
+            }
         }
     }
 }

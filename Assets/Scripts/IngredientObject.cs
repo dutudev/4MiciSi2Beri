@@ -15,5 +15,6 @@ public class IngredientObject : Draggable
     protected override void ClickedFirstTime()
     {
         GameManager.gameManager.SubtractMoneyWithText(ingredient.price);
+        AudioManager.instance.PlaySoundOnce(3);
     }
 }

@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         _orders.Remove(_orders[0]);
         _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime); // added this here so it actaulyl owkr
         ResetAllCustomerObjects();
+        AudioManager.instance.PlaySoundOnce(0);
     }
     public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
     {
@@ -259,6 +260,7 @@ public class GameManager : MonoBehaviour
                     nameToCustomer[newOrder.name] = Random.Range(0, customersObjects.Count());
                 }
                 customersObjects[nameToCustomer[newOrder.name]].SetActive(true);
+                AudioManager.instance.PlaySoundOnce(4);
                 //maybe add some tween
             }
         }
@@ -282,7 +284,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         HoldCanvas.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetKey(KeyCode.E) && (_ingredients.Count != 0 || _meats.Count != 0))
+        if (Input.GetKey(KeyCode.E) && (_ingredients.Count != 0 || _meats.Count != 0) && _orders.Count!=0)
         {
             if (_fill < 1)
             {
