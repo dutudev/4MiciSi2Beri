@@ -75,9 +75,28 @@ public class Meat : Draggable
         return ingredient;
     }
 
-    public bool isCookedWell()
+    public float cookedValue()
     {
-        Debug.Log(currentMeatState);
-        return currentMeatState == 1;
+        float x = _cookedProgress;
+        // Between 2 and 3 ? return 2
+        if (x > 2f && x < 3f)
+            return 2f;
+
+        // Lerp from 0 ? 1 as x goes 1.5 ? 2
+        if (x >= 1.5f && x <= 2f)
+        {
+            float t = (x - 1.5f) / (2f - 1.5f); // normalize to 0–1
+            return Mathf.Lerp(0f, 1f, t);
+        }
+
+        // Lerp from 1 ? 0 as x goes 3 ? 3.5
+        if (x >= 3f && x <= 3.5f)
+        {
+            float t = (x - 3f) / (3.5f - 3f); // normalize to 0–1
+            return Mathf.Lerp(1f, 0f, t);
+        }
+
+        // Outside ranges ? 0 (or whatever default you want)
+        return 0f;
     }
 }

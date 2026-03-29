@@ -17,7 +17,7 @@ public class Order
     public string orderDescription="";
     public Order Randomize()
     {
-        bool usualRequested = false
+        bool usualRequested = false;
         name = NameGenerator.GetRandomName();
         if (Random.Range(1, 10) == 1&&GameManager.gameManager.todaysOrders.Count>0)
         {
@@ -118,10 +118,10 @@ public class Order
                     ingredientDescriptions.Add($"1x {dish.name}\n");
                 }
             }
-        if (Random.Range(1, 10) == 1 && GameManager.gameManager.todaysOrders.Any(x=>x.Sauce!=null))
+        if (Random.Range(1, 10) == 1 && GameManager.gameManager.todaysOrders.Any(x=>x.Sauce!=null&& x.name != name))
         {
 
-            var ordersWithSauce = GameManager.gameManager.todaysOrders.Where(x => x.Sauce != null).ToList();
+            var ordersWithSauce = GameManager.gameManager.todaysOrders.Where(x => x.Sauce != null&& x.name != name).ToList();
             Order randomOrder = ordersWithSauce[Random.Range(0, ordersWithSauce.Count)];
             Sauce = randomOrder.Sauce;
             price += randomOrder.Sauce.price;
