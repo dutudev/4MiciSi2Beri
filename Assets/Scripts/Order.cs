@@ -132,13 +132,16 @@ public class Order
             var keys = GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Select(x => x.Key).ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
-            Sauce = usualOrder.Sauce;
-            name = randomKey;
-            price += usualOrder.Sauce.price;
-            preparationTime += 15;
-            usualRequested = true;
+            if (usualOrder.Sauce != null)
+            {
+                Sauce = usualOrder.Sauce;
+                name = randomKey;
+                price += usualOrder.Sauce.price;
+                preparationTime += 15;
+                usualRequested = true;
 
-            ingredientDescriptions.Add($"The usual Sauce\n");
+                ingredientDescriptions.Add($"The usual Sauce\n");
+            }
         }
         else if (Random.Range(1, 10) == 1 && GameManager.gameManager.todaysOrders.Count>0)
         {
