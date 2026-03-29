@@ -43,13 +43,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject OrderCompletedTitle;
     [SerializeField] private GameObject OrderCompletedMoney;
     [SerializeField] private GameObject dayCounter;
-    public List<GameObject> spriteCustomers;
-    private GameObject currentCustomerObj;
-    public Dictionary<string, int> nameToCustomer;
+    [SerializeField] private GameObject spriteCustomers; // ?
+    public Dictionary<string, int> nameToCustomer = new Dictionary<string, int>(); // name to customer gameobject index
+    [SerializeField] private List<GameObject> customersObjects = new List<GameObject>();
     [SerializeField] private TMP_Text timeTextTMP;
     [SerializeField] private CameraMovement cameraMovement;
+    [SerializeField] private TMP_Text endText;
     public GameObject CounterCanvas;
     public Canvas HoldCanvas;
+    
+    
+    
+    
     
     private bool _showTheMeat = false;
     private string _currentAsm;
@@ -67,6 +72,7 @@ public class GameManager : MonoBehaviour
     private CanvasGroup counterGroup;
     [SerializeField] private CanvasGroup HoldCanvasGroup;
     [SerializeField] private CanvasGroup OrderCompleted;
+    [SerializeField] private CanvasGroup endDayMenu;
     void Start()
     {
         gameManager = this;
@@ -76,6 +82,7 @@ public class GameManager : MonoBehaviour
     }
     public void AddCoins(float delta)
     {
+        delta = Mathf.Round(delta * 10f) / 10f;
         economy.coins += delta;
         _moneyEarnedToday += delta;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins}";
@@ -118,29 +125,39 @@ public class GameManager : MonoBehaviour
         //LeanTween.alphaText(OrderCompletedSatisfaction.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         //LeanTween.alphaText(OrderCompletedMoney.GetComponent<RectTransform>(), 0, 1).setDelay(2);
         _orders.Remove(_orders[0]);
+        _timeUntilOrder = Random.Range(_minOrderAppearTime, _maxOrderAppearTime); // added this here so it actaulyl owkr
+        ResetAllCustomerObjects();
     }
     public void ServeDish(List<Ingredient> ingredients, List<Meat> meats)
     {
-        if (_orders.Count >0 && _orders[0]!=null && currentCustomerObj!=null)
+        if (_orders.Count >0 && _orders[0]!=null)
         {
             Order newOrder = new Order();
             newOrder.desiredOrder=meats.Select(x=>x.GetIngredient()).ToList();
             newOrder.desiredSides = ingredients.Where(x => possibleSides.Contains(x)).ToList();
             newOrder.Sauce=ingredients.Any(x=>possibleSauces.Contains(x))? ingredients.First(x => possibleSauces.Contains(x)):null;
             EndOrder(newOrder,meats);
-            currentCustomerObj.SetActive(false);
-            currentCustomerObj = null;
         }
     }
     bool dayOngoing = true;
     public void EndDay()
     {
+        var showOrders = Mathf.RoundToInt(_ordersCompletedToday);
+        var showMoney = _moneyEarnedToday;
+        var showMoney2 = _moneySpentToday;
         dayOngoing = false;
         _orders.Clear();
         todaysOrders.Clear();
         _ordersCompletedToday = 0;
         _moneySpentToday = 0;
         _happiness = 0;
+        //show ui and set timescale to 0
+        //make the button trigger the obj reset and transition
+        Time.timeScale = 0;
+        endText.text = "Orders completed : " + showOrders + "\nMoney earned : " + showMoney + "\nMoney spent : " + showMoney2;
+        endDayMenu.gameObject.SetActive(true);
+        endDayMenu.alpha = 0;
+        LeanTween.alphaCanvas(endDayMenu, 1, 1).setEaseOutExpo().setIgnoreTimeScale(true);
     }
 
     public void StartDay()
@@ -179,6 +196,11 @@ public class GameManager : MonoBehaviour
     {
         UpdateDeliveryText();
         timeTextTMP.text = "NaN";
+        if (_orders.Count == 0)
+        {
+            ResetOrderText();    
+        }
+        
         if (_ordersCompletedToday > _ordersPerDay) EndDay();
         if (!dayOngoing) return;
         _timeUntilOrder -= Time.deltaTime; 
@@ -218,23 +240,25 @@ public class GameManager : MonoBehaviour
                 _timeAdded.Add(newOrder, Time.time);
                 orderDescription.GetComponent<TextMeshProUGUI>().text = newOrder.orderDescription;
                 orderName.GetComponent<TextMeshProUGUI>().text = newOrder.name;
-                if (nameToCustomer.ContainsKey(name))
-                {// put customer
-                    spriteCustomers[nameToCustomer[name]].SetActive(true);
-                    currentCustomerObj = spriteCustomers[nameToCustomer[name]];
+                if (!nameToCustomer.ContainsKey(newOrder.name))
+                {
+                    nameToCustomer[newOrder.name] = Random.Range(0, customersObjects.Count());
                 }
-                else
-                {// generate random customer
-                    nameToCustomer[name] = Random.Range(0, spriteCustomers.Count);
-                    spriteCustomers[nameToCustomer[name]].SetActive(true);
-                    currentCustomerObj = spriteCustomers[nameToCustomer[name]];
-                }
+                customersObjects[nameToCustomer[newOrder.name]].SetActive(true);
+                //maybe add some tween
             }
         }
         
         
         
        
+    }
+
+    private void ResetOrderText()
+    {
+        timeText.GetComponent<TextMeshProUGUI>().text = "";
+        orderDescription.GetComponent<TextMeshProUGUI>().text = "Waiting for Customer";
+        orderName.GetComponent<TextMeshProUGUI>().text = "No order";
     }
 
     private void UpdateDeliveryText()
@@ -248,7 +272,7 @@ public class GameManager : MonoBehaviour
         {
             if (_fill < 1)
             {
-                //ServeDish();
+                //GameManager.gameManager.ServeDish();
                 _fill += Time.deltaTime / 2.5f;
             }
             else
@@ -335,5 +359,43 @@ public class GameManager : MonoBehaviour
                 counterGroup.gameObject.SetActive(false);
             }).id;
         }
+    }
+
+    public void ResetAllCustomerObjects()
+    {
+        foreach (var obj in customersObjects)
+        {
+            obj.SetActive(false);
+        }
+    }
+
+    public void ClearAllDraggables()
+    {
+        List<Draggable> objects = GameObject.FindObjectsByType<Draggable>(FindObjectsSortMode.None).ToList();
+        for (int i = objects.Count - 1; i >= 0; i--)
+        {
+            var obj = objects[i];
+            objects.RemoveAt(i);
+            Destroy(obj.gameObject);
+        }
+    }
+
+    public void NextDay()
+    {
+        SceneManagerTransition.instance.ShowTransition();
+        LeanTween.delayedCall(0.6f, () =>
+        {
+            cameraMovement.ResetCamera();
+            ClearAllDraggables();
+            endDayMenu.gameObject.SetActive(false);
+            StartDay();
+            SceneManagerTransition.instance.UnshowTransition();
+            Time.timeScale = 1f;
+        }).setIgnoreTimeScale(true);
+    }
+
+    public void GoToMenu()
+    {
+        SceneManagerTransition.instance.MoveToScene("MainMenu");
     }
 }

@@ -97,4 +97,11 @@ public class CameraMovement : MonoBehaviour
         return _shownCounter;
     }
 
+    public void ResetCamera()
+    {
+        _shownCounter = false;
+        _currentState = 0;
+        gameObject.transform.position = new Vector3(0, 0, -10);
+    }
+
 }
