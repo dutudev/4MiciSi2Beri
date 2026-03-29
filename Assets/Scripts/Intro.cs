@@ -29,6 +29,15 @@ public class Intro : MonoBehaviour
             return;
         }
 
+        if (_index == 1)
+        {
+            AudioManager.instance.PlaySoundOnce(5);
+        }
+        if (_index == 2)
+        {
+            AudioManager.instance.PlaySoundOnce(6);
+        }
+        
         image.sprite = scenes[_index].imag;
         textus.text = scenes[_index].text;
     }

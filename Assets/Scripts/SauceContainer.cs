@@ -22,6 +22,7 @@ public class SauceContainer : Draggable
         if (Input.GetMouseButtonDown(1) && IsDragging())
         {
             Instantiate(sauceToPlace, transform.position + new Vector3(0, -.65f, 0), quaternion.identity);
+            AudioManager.instance.PlaySoundOnce(2);
         }
     }
 
