@@ -40,7 +40,10 @@ public class SceneManagerTransition : MonoBehaviour
             transitionRenderer.material.SetFloat("_Progress", val);
         }).setOnComplete(() =>
         {
-            SceneManager.LoadScene(sceneName);
+            LeanTween.delayedCall(0.2f, () =>
+            {
+                SceneManager.LoadScene(sceneName);
+            });
         }).setIgnoreTimeScale(true);
     }
 

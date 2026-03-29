@@ -150,7 +150,7 @@ public class Order
     .FirstOrDefault()?.Key;
             price += Sauce.price;
             preparationTime += 15;
-            ingredientDescriptions.Add($"The most popular Sauce\n");
+            ingredientDescriptions.Add($"Today's popular Sauce\n");
         }
         else
         if (Random.Range(0, 2) == 0) {
