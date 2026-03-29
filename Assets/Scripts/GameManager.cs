@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         delta = Mathf.Round(delta * 10f) / 10f;
         economy.coins += delta;
         _moneyEarnedToday += delta;
+        economy.coins = Mathf.Round(economy.coins * 10f) / 10f;
         moneyText.GetComponent<TextMeshProUGUI>().text = $"{economy.coins}";
     }
 

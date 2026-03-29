@@ -19,7 +19,7 @@ public class Order
     {
         bool usualRequested = false;
         name = NameGenerator.GetRandomName();
-        if (Random.Range(1, 10) == 1&&GameManager.gameManager.todaysOrders.Count>0)
+        if (Random.Range(1, 20) == 1&&GameManager.gameManager.todaysOrders.Count>0)
         {
             Order randomOrder = GameManager.gameManager.todaysOrders[Random.Range(0, GameManager.gameManager.todaysOrders.Count)];
             desiredOrder=randomOrder.desiredOrder;
@@ -27,7 +27,7 @@ public class Order
             price += randomOrder.desiredOrder.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Main Dishes {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 10) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
+        else if (Random.Range(1, 20) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
         {
             var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
@@ -68,7 +68,7 @@ public class Order
                     ingredientDescriptions.Add($"1x {dish.name}\n");
                 }
             }
-        if (Random.Range(1, 10) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
+        if (Random.Range(1, 20) == 1 && GameManager.gameManager.todaysOrders.Count > 0)
         {
             Order randomOrder = GameManager.gameManager.todaysOrders[Random.Range(0, GameManager.gameManager.todaysOrders.Count)];
             desiredSides = randomOrder.desiredSides;
@@ -76,7 +76,7 @@ public class Order
             price += randomOrder.desiredSides.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Side Dishes {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 10) == 1 && GameManager.gameManager.nameToOrder.Count > 0 && !usualRequested)
+        else if (Random.Range(1, 20) == 1 && GameManager.gameManager.nameToOrder.Count > 0 && !usualRequested)
         {
             
             var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
