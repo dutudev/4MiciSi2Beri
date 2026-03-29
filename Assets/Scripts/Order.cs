@@ -27,9 +27,9 @@ public class Order
             price += randomOrder.desiredOrder.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Main Dishes {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 20) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
+        else if (Random.Range(1, 20) == 1 && GameManager.gameManager.nameToOrder.Where(x=>!GameManager.gameManager.todaysOrders.Contains(x.Value)).Count() > 0)
         {
-            var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
+            var keys = GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Select(x=>x.Key).ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
             desiredOrder = usualOrder.desiredOrder;
@@ -76,10 +76,9 @@ public class Order
             price += randomOrder.desiredSides.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Side Dishes {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 20) == 1 && GameManager.gameManager.nameToOrder.Count > 0 && !usualRequested)
+        else if (Random.Range(1, 20) == 1 && !usualRequested && GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Count() > 0)
         {
-            
-            var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
+            var keys = GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Select(x => x.Key).ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
             desiredSides = usualOrder.desiredSides;
@@ -128,9 +127,9 @@ public class Order
             preparationTime += 15;
             ingredientDescriptions.Add($"Whatever Sauce {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 2) == 1 && !usualRequested && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
+        else if (Random.Range(1, 2) == 1 && !usualRequested && GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Count() > 0)
         {
-            var keys = GameManager.gameManager.nameToOrder.Keys.Where(x => GameManager.gameManager.nameToOrder[x].Sauce != null).ToList();
+            var keys = GameManager.gameManager.nameToOrder.Where(x => !GameManager.gameManager.todaysOrders.Contains(x.Value)).Select(x => x.Key).ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
             Sauce = usualOrder.Sauce;
