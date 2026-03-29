@@ -14,6 +14,7 @@ public class GrillBehaviour : MonoBehaviour
     {
         foreach (Meat meat in meatOnGrill)
         {
+            if (!meat.IsDragging())
             meat.AffectCookedProgress(Time.deltaTime);
         }
     }
