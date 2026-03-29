@@ -388,9 +388,14 @@ public class GameManager : MonoBehaviour
         List<Draggable> objects = GameObject.FindObjectsByType<Draggable>(FindObjectsSortMode.None).ToList();
         for (int i = objects.Count - 1; i >= 0; i--)
         {
+            
             var obj = objects[i];
-            objects.RemoveAt(i);
-            Destroy(obj.gameObject);
+            if (obj.gameObject.layer != LayerMask.NameToLayer("SauceContainer"))
+            {
+                objects.RemoveAt(i);
+                Destroy(obj.gameObject);
+            }
+            
         }
     }
 

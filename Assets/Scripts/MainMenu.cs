@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManagerTransition.instance.MoveToScene("Vlad");
+        SceneManagerTransition.instance.MoveToScene("Intro");
     }
 
     public void QuitGame()
