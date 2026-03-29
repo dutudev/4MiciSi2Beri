@@ -1561,7 +1561,7 @@ MonoBehaviour:
   _minOrderAppearTime: 2
   _maxOrderAppearTime: 5
   _maxorders: 1
-  _ordersPerDay: 1
+  _ordersPerDay: 4
   _day: 0
   possibleSauces:
   - {fileID: 11400000, guid: 84580fb5a38f7d84bb2a0b67625d5eb0, type: 2}
