@@ -17,6 +17,7 @@ public class Order
     public string orderDescription="";
     public Order Randomize()
     {
+        bool usualRequested = false
         name = NameGenerator.GetRandomName();
         if (Random.Range(1, 10) == 1&&GameManager.gameManager.todaysOrders.Count>0)
         {
@@ -35,6 +36,7 @@ public class Order
             preparationTime += usualOrder.desiredOrder.Count*15;
             price += usualOrder.desiredOrder.Sum(x => x.price);
             name = randomKey;
+            usualRequested = true;
             ingredientDescriptions.Add($"My usual Main Dishes\n");
         }
         else
@@ -74,8 +76,9 @@ public class Order
             price += randomOrder.desiredSides.Sum(x => x.price);
             ingredientDescriptions.Add($"Whatever Side Dishes {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 10) == 1 && GameManager.gameManager.nameToOrder.Count > 0)
+        else if (Random.Range(1, 10) == 1 && GameManager.gameManager.nameToOrder.Count > 0 && !usualRequested)
         {
+            
             var keys = GameManager.gameManager.nameToOrder.Keys.ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
             Order usualOrder = GameManager.gameManager.nameToOrder[randomKey];
@@ -83,6 +86,8 @@ public class Order
             preparationTime += usualOrder.desiredSides.Count * 15;
             price += usualOrder.desiredSides.Sum(x => x.price);
             name = randomKey;
+            usualRequested = true;
+
             ingredientDescriptions.Add($"My usual Side Dishes\n");
         }
         else
@@ -123,7 +128,7 @@ public class Order
             preparationTime += 15;
             ingredientDescriptions.Add($"Whatever Sauce {randomOrder.name} had\n");
         }
-        else if (Random.Range(1, 10) == 1 && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
+        else if (Random.Range(1, 2) == 1 && !usualRequested && GameManager.gameManager.nameToOrder.Any(x => x.Value.Sauce != null))
         {
             var keys = GameManager.gameManager.nameToOrder.Keys.Where(x => GameManager.gameManager.nameToOrder[x].Sauce != null).ToList();
             string randomKey = keys[Random.Range(0, keys.Count)];
@@ -132,6 +137,8 @@ public class Order
             name = randomKey;
             price += usualOrder.Sauce.price;
             preparationTime += 15;
+            usualRequested = true;
+
             ingredientDescriptions.Add($"The usual Sauce\n");
         }
         else if (Random.Range(1, 10) == 1 && GameManager.gameManager.todaysOrders.Count>0)
